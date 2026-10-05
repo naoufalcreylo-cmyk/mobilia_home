@@ -1,0 +1,84 @@
+{%- comment -%}
+  Shoppable scenes. Each block = one scene: image (defaults to the hero product photo), hotspot on the
+  hero product, and up to 4 real catalogue pieces "à associer". "Ajouter l’ensemble" adds every
+  available piece in one /cart/add.js call.
+{%- endcomment -%}
+<section class="section" aria-labelledby="looks-{{ section.id }}" data-looks>
+  <div class="container">
+    <div class="section-head">
+      <div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2 section-head__title" id="looks-{{ section.id }}">{{ section.settings.title }}</h2></div>
+      {%- if section.settings.text != blank -%}<div class="section-head__aside">{{ section.settings.text }}</div>{%- endif -%}
+    </div>
+    {%- if section.blocks.size > 1 -%}
+      <div class="tabs looks__tabs" role="tablist" aria-label="{{ section.settings.eyebrow | escape }}">
+        {%- for block in section.blocks -%}
+          <button class="chip" type="button" role="tab" id="look-tab-{{ block.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="look-{{ block.id }}"{% unless forloop.first %} tabindex="-1"{% endunless %}>{{ block.settings.label }}</button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign hero = block.settings.product
+        assign scene = block.settings.image | default: hero.featured_media.preview_image
+        assign total = 0
+        assign ids = ''
+        if hero.available
+          assign total = hero.price
+          assign ids = hero.selected_or_first_available_variant.id
+        endif
+        assign count = 1
+      -%}
+      <div class="look" id="look-{{ block.id }}" role="tabpanel" aria-labelledby="look-tab-{{ block.id }}" data-list="look_{{ block.settings.label | handleize }}"{% unless forloop.first %} hidden{% endunless %} {{ block.shopify_attributes }}>
+        <div class="look__scene">
+          <div class="media">{% render 'image', image: scene, sizes: '(min-width:1024px) 62vw, 100vw', max: 1600, alt: block.settings.label %}</div>
+          {%- if hero -%}
+            <button class="look__spot" type="button" style="left:{{ block.settings.x }}%;top:{{ block.settings.y }}%" aria-expanded="false" aria-controls="pop-{{ block.id }}" aria-label="{{ 'looks.view' | t: name: hero.title | escape }}"></button>
+            <a class="look__pop" id="pop-{{ block.id }}" href="{{ hero.url }}" style="left:min(calc({{ block.settings.x }}% + 28px), calc(100% - 270px));top:calc({{ block.settings.y }}% - 50px)">
+              <div class="media">{% render 'image', image: hero.featured_media.preview_image, sizes: '72px', max: 240, alt: '' %}</div>
+              <p><strong>{{ hero.title | split: ' – ' | first }}</strong>{{ hero.price | money }}</p>
+            </a>
+          {%- endif -%}
+        </div>
+        <div class="look__side">
+          <div><h3 class="h3">{{ block.settings.title }}</h3>{%- if block.settings.intro != blank -%}<p class="look__intro">{{ block.settings.intro }}</p>{%- endif -%}</div>
+          <ul class="look__list" role="list">
+            {%- if hero -%}{% render 'look-row', product: hero, main: true %}{%- endif -%}
+            {%- for p in block.settings.pair limit: 4 -%}
+              {%- if p.available -%}
+                {% render 'look-row', product: p %}
+                {%- assign total = total | plus: p.price -%}
+                {%- assign ids = ids | append: ',' | append: p.selected_or_first_available_variant.id -%}
+                {%- assign count = count | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+          <div class="look__total"><span class="small muted">{{ 'looks.set' | t: count: count }}</span><span class="price">{{ total | money }}</span></div>
+          <button class="btn btn--block" type="button" data-add-set="{{ ids | remove_first: ',' }}" data-list="shop_the_look">{{ 'looks.add_set' | t }}</button>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Inspirations achetables",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Inspirations achetables" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Composez la pièce, <em>pas seulement</em> le meuble." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Chaque scène réunit une pièce maîtresse et les meubles de notre catalogue qui l’accompagnent. Ajoutez-les directement au panier." }
+  ],
+  "blocks": [
+    { "type": "scene", "name": "Scène", "limit": 6, "settings": [
+      { "type": "text", "id": "label", "label": "Onglet", "default": "Salon contemporain" },
+      { "type": "text", "id": "title", "label": "Titre", "default": "Un salon ouvert, pensé pour recevoir" },
+      { "type": "textarea", "id": "intro", "label": "Introduction" },
+      { "type": "image_picker", "id": "image", "label": "Photo de la scène", "info": "Sinon : photo du produit principal." },
+      { "type": "product", "id": "product", "label": "Produit dans la scène" },
+      { "type": "range", "id": "x", "label": "Point — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+      { "type": "range", "id": "y", "label": "Point — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 60 },
+      { "type": "product_list", "id": "pair", "label": "Pièces à associer", "limit": 4 }
+    ] }
+  ],
+  "presets": [{ "name": "Inspirations achetables", "blocks": [{ "type": "scene" }, { "type": "scene", "settings": { "label": "Salle à manger", "title": "Une table ronde pour six convives" } }] }]
+}
+{% endschema %}

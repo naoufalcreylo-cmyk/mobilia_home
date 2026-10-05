@@ -1,0 +1,26 @@
+{%- comment -%}
+  Outputs a wa.me URL with a pre-filled message (no surrounding whitespace, safe inside href="").
+  Params:
+  - message: free text (defaults to the theme setting "help_message")
+  - product: optional — builds "order this product" message with title, variant, quantity, price and URL
+  - variant, quantity: optional, used with product
+  theme.js keeps the quantity in sync on the product page (data-wa-product).
+{%- endcomment -%}
+{%- capture nl %}
+{% endcapture -%}
+{%- liquid
+  assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-'
+  assign text = message | default: settings.help_message
+  if product
+    assign v = variant | default: product.selected_or_first_available_variant
+    assign qty = quantity | default: 1
+    assign text = 'whatsapp.order_intro' | t | append: nl | append: '• ' | append: product.title
+    unless v.title == 'Default Title'
+      assign text = text | append: ' — ' | append: v.title
+    endunless
+    assign qty_line = 'whatsapp.quantity' | t: quantity: qty
+    assign price_line = v.price | money | strip_html
+    assign text = text | append: nl | append: '• ' | append: qty_line | append: nl | append: '• ' | append: price_line | append: nl | append: shop.url | append: product.url
+  endif
+-%}
+https://wa.me/{{ number }}?text={{ text | url_encode }}

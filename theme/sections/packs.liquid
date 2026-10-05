@@ -1,0 +1,68 @@
+{%- comment -%}
+  Packs as curated solutions: composition chips + pack price + real savings.
+  Composition comes from the block, else from metafield mobilia.pack_items (list of single-line text).
+{%- endcomment -%}
+<section class="section section--linen" aria-labelledby="packs-{{ section.id }}">
+  <div class="container">
+    <div class="section-head">
+      <div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2 section-head__title" id="packs-{{ section.id }}">{{ section.settings.title }}</h2></div>
+      {%- if section.settings.text != blank -%}<div class="section-head__aside">{{ section.settings.text }}</div>{%- endif -%}
+    </div>
+    <div class="packs__grid" data-list="packs">
+      {%- for block in section.blocks limit: 4 -%}
+        {%- liquid
+          assign p = block.settings.product
+          if p == blank
+            continue
+          endif
+          assign v = p.selected_or_first_available_variant
+          assign img = block.settings.image | default: p.metafields.mobilia.card_image.value | default: p.featured_media.preview_image
+          assign items = block.settings.items | newline_to_br | split: '<br />'
+          if block.settings.items == blank
+            assign items = p.metafields.mobilia.pack_items.value
+          endif
+        -%}
+        <article class="pack {% if forloop.first %}pack--hero{% else %}pack--sm{% endif %} reveal" data-handle="{{ p.handle }}" {{ block.shopify_attributes }}>
+          <div class="media">
+            {%- if forloop.first -%}{% render 'image', image: img, sizes: '(min-width:1024px) 48vw, 100vw', max: 1600, alt: block.settings.name %}{%- else -%}{% render 'image', image: img, sizes: '(min-width:1024px) 20vw, 120px', max: 720, alt: block.settings.name %}{%- endif -%}
+            {%- if block.settings.badge != blank -%}<span class="badge pack__count">{{ block.settings.badge }}</span>{%- endif -%}
+          </div>
+          <div style="display:grid;gap:.75rem">
+            <h3 class="pack__name"><a href="{{ p.url }}">{{ block.settings.name | default: p.title }}</a></h3>
+            {%- if items.size > 0 -%}<ul class="pack__items" role="list">{%- for item in items -%}{%- assign label = item | strip -%}{%- if label != blank -%}<li>{{ label }}</li>{%- endif -%}{%- endfor -%}</ul>{%- endif -%}
+            <p class="pack__price">{% render 'price', product: p, show_off: false %}</p>
+            {%- if v.compare_at_price > v.price -%}
+              {%- assign save = v.compare_at_price | minus: v.price | money -%}
+              <p class="pack__save">{{ 'products.you_save' | t: amount: save }}</p>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+    {%- if section.settings.collection != blank -%}
+      <div class="selection__foot"><a class="btn btn--ghost" href="{{ section.settings.collection.url }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a></div>
+    {%- endif -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Packs",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Packs Mobilia" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Des packs pour aménager <em>plus simplement</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Des ensembles coordonnés, pensés par pièce, avec un prix d’ensemble plus doux que l’achat séparé." },
+    { "type": "collection", "id": "collection", "label": "Collection « tous les packs »" },
+    { "type": "text", "id": "cta_label", "label": "Bouton", "default": "Tous les packs" }
+  ],
+  "blocks": [
+    { "type": "pack", "name": "Pack", "limit": 4, "settings": [
+      { "type": "product", "id": "product", "label": "Produit pack" },
+      { "type": "text", "id": "name", "label": "Nom affiché", "default": "Pack chambre" },
+      { "type": "text", "id": "badge", "label": "Badge", "default": "Pack chambre" },
+      { "type": "image_picker", "id": "image", "label": "Image (évitez les visuels avec prix incrusté)" },
+      { "type": "textarea", "id": "items", "label": "Composition (une ligne par élément)", "info": "Sinon : métachamp mobilia.pack_items." }
+    ] }
+  ],
+  "presets": [{ "name": "Packs", "blocks": [{ "type": "pack" }, { "type": "pack" }, { "type": "pack" }, { "type": "pack" }] }]
+}
+{% endschema %}

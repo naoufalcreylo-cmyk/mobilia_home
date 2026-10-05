@@ -1,0 +1,44 @@
+<section class="section project on-dark" aria-labelledby="proj-{{ section.id }}">
+  <div class="container project__grid">
+    <div class="project__copy">
+      <span class="label">{{ section.settings.eyebrow }}</span>
+      <h2 class="h1" id="proj-{{ section.id }}">{{ section.settings.title }}</h2>
+      <p class="body-l">{{ section.settings.text }}</p>
+      <div class="project__ctas">
+        <a class="btn btn--light" href="{% render 'whatsapp-url', message: section.settings.whatsapp_message %}" target="_blank" rel="noopener" data-wa-context="project">{% render 'icon', name: 'whatsapp' %}{{ section.settings.cta_label }}</a>
+        {%- if section.settings.cta2_label != blank -%}<a class="btn btn--outline-light" href="{{ section.settings.cta2_link }}">{{ section.settings.cta2_label }}</a>{%- endif -%}
+      </div>
+    </div>
+    <ol class="project__steps" role="list">
+      {%- for block in section.blocks -%}
+        <li class="project__step reveal" {{ block.shopify_attributes }}><b>0{{ forloop.index }}</b><div><h3>{{ block.settings.title }}</h3><p>{{ block.settings.text }}</p></div></li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Projet d’aménagement",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Home Décor · conseil gratuit" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Vous avez un projet d’aménagement ?" },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Envoyez-nous vos dimensions, votre budget et vos inspirations. Nos experts en décoration vous écoutent, vous conseillent et vous accompagnent — pour tous les budgets." },
+    { "type": "text", "id": "cta_label", "label": "Bouton WhatsApp", "default": "Parler à un conseiller déco" },
+    { "type": "textarea", "id": "whatsapp_message", "label": "Message WhatsApp pré-rempli", "default": "Bonjour Mobilia, j’ai un projet d’aménagement et j’aimerais être conseillé(e). Pièce : … / Dimensions : … / Budget : …" },
+    { "type": "text", "id": "cta2_label", "label": "Bouton secondaire", "default": "Venir en showroom" },
+    { "type": "url", "id": "cta2_link", "label": "Lien secondaire" }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Étape", "limit": 5, "settings": [
+      { "type": "text", "id": "title", "label": "Titre" },
+      { "type": "textarea", "id": "text", "label": "Texte" }
+    ] }
+  ],
+  "presets": [{ "name": "Projet d’aménagement", "blocks": [
+    { "type": "step", "settings": { "title": "Vous partagez votre espace", "text": "Un message WhatsApp avec vos mesures, quelques photos ou simplement une idée." } },
+    { "type": "step", "settings": { "title": "Nous vous conseillons", "text": "Nos experts Home Décor proposent les pièces, les formats et les teintes adaptés." } },
+    { "type": "step", "settings": { "title": "Vous choisissez votre mobilier", "text": "En ligne ou en showroom, avec la possibilité du sur-mesure et du crédit gratuit." } },
+    { "type": "step", "settings": { "title": "Mobilia livre et installe", "text": "Livraison partout au Maroc et montage offert par nos techniciens menuisiers." } }
+  ] }]
+}
+{% endschema %}

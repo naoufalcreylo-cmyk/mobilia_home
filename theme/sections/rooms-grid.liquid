@@ -1,0 +1,63 @@
+{%- comment -%}
+  "Aménagez chaque espace": asymmetric editorial grid (first tile large). Up to 6 rooms.
+  Piece count = sum of the selected collections' product counts (or the main collection's).
+{%- endcomment -%}
+<section class="section" aria-labelledby="rooms-{{ section.id }}">
+  <div class="container">
+    <div class="section-head">
+      <div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2 section-head__title" id="rooms-{{ section.id }}">{{ section.settings.title }}</h2></div>
+      {%- if section.settings.text != blank -%}<div class="section-head__aside">{{ section.settings.text }}</div>{%- endif -%}
+    </div>
+    <div class="rooms__grid">
+      {%- assign letters = 'a,b,c,d,e,f' | split: ',' -%}
+      {%- for block in section.blocks limit: 6 -%}
+        {%- liquid
+          assign c = block.settings.collection
+          assign img = block.settings.image | default: block.settings.image_product.featured_media.preview_image | default: c.featured_image
+          assign count = 0
+          for col in block.settings.extra_collections
+            assign count = count | plus: col.all_products_count
+          endfor
+          if count == 0
+            assign count = c.all_products_count
+          endif
+          assign href = block.settings.link | default: c.url
+          if forloop.first
+            assign sizes = '(min-width:1024px) 58vw, 100vw'
+          else
+            assign sizes = '(min-width:1024px) 40vw, 50vw'
+          endif
+        -%}
+        <a class="room room--{{ letters[forloop.index0] }} reveal" href="{{ href }}" {{ block.shopify_attributes }}>
+          <div class="media">{% render 'image', image: img, sizes: sizes, alt: '', max: 1600 %}</div>
+          <span class="room__label">
+            <span><span class="room__title">{{ block.settings.title | default: c.title }}</span>
+              {%- if count > 0 -%}<span class="room__meta" style="display:block">{{ 'rooms.pieces' | t: count: count }}</span>{%- endif -%}</span>
+            <span class="room__go">{% render 'icon', name: 'arrow' %}</span>
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Pièces de vie",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Par pièce de vie" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Aménagez chaque <em>espace</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Pensez votre intérieur pièce par pièce : salons, salles à manger, chambres et rangements, réunis au même endroit." }
+  ],
+  "blocks": [
+    { "type": "room", "name": "Pièce", "limit": 6, "settings": [
+      { "type": "text", "id": "title", "label": "Titre" },
+      { "type": "collection", "id": "collection", "label": "Collection principale" },
+      { "type": "collection_list", "id": "extra_collections", "label": "Collections comptées (optionnel)", "info": "Le nombre de pièces affiché additionne ces collections." },
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "product", "id": "image_product", "label": "…ou photo de ce produit" },
+      { "type": "url", "id": "link", "label": "Lien (sinon collection)" }
+    ] }
+  ],
+  "presets": [{ "name": "Pièces de vie", "blocks": [{ "type": "room" }, { "type": "room" }, { "type": "room" }, { "type": "room" }, { "type": "room" }, { "type": "room" }] }]
+}
+{% endschema %}

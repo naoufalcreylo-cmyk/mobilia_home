@@ -1,0 +1,21 @@
+{%- comment -%}
+  Responsive image with srcset. Params: image, sizes, alt, eager (bool), class, max (px, default 2000)
+  Eager images get fetchpriority=high and are preloaded (LCP); others lazy-load.
+{%- endcomment -%}
+{%- liquid
+  assign max = max | default: 2000
+  assign widths = '240,360,540,720,960,1200,1600,2000'
+  if max <= 720
+    assign widths = '240,360,540,720'
+  elsif max <= 1200
+    assign widths = '240,360,540,720,960,1200'
+  endif
+  assign img_alt = alt | default: image.alt | escape
+-%}
+{%- if image != blank -%}
+  {%- if eager -%}
+    {{ image | image_url: width: max | image_tag: widths: widths, sizes: sizes, alt: img_alt, class: class, loading: 'eager', fetchpriority: 'high', preload: true, decoding: 'async' }}
+  {%- else -%}
+    {{ image | image_url: width: max | image_tag: widths: widths, sizes: sizes, alt: img_alt, class: class, loading: 'lazy', decoding: 'async' }}
+  {%- endif -%}
+{%- endif -%}

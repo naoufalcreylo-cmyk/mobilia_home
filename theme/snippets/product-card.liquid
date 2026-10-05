@@ -1,0 +1,68 @@
+{%- comment -%}
+  Product card. Params:
+  - product (required)
+  - list: analytics list name (select_item / view_item_list)
+  - sizes: srcset sizes hint (default: 4/3/2-column grid)
+  - eager: true for above-the-fold cards
+  - compact: smaller title, no tagline (secondary lists)
+
+  Data (see docs/03-shopify-architecture.md):
+  - mobilia.category (single line)     → eyebrow; falls back to product.type
+  - mobilia.display_name (single line) → title; falls back to the part of the title before " – "
+  - mobilia.dimensions (single line)   → e.g. "270 × 205 cm"
+  - mobilia.card_image (file)          → merchandised card photo; falls back to featured media
+  - mobilia.customizable (boolean)     → "Sur mesure" badge
+  - tag "nouveau"                      → "Nouveau" badge
+{%- endcomment -%}
+{%- liquid
+  assign mf = product.metafields.mobilia
+  assign category = mf.category.value | default: product.type
+  assign title_parts = product.title | replace: ' - ', ' – ' | split: ' – '
+  assign name = mf.display_name.value | default: title_parts.first
+  assign tagline = mf.tagline.value
+  if tagline == blank and title_parts.size > 1
+    assign tagline = title_parts | slice: 1, 5 | join: ' – '
+  endif
+  assign primary = mf.card_image.value | default: product.featured_media.preview_image
+  assign secondary = nil
+  for m in product.media limit: 3
+    if m.preview_image.src != primary.src
+      assign secondary = m.preview_image
+      break
+    endif
+  endfor
+  assign sizes = sizes | default: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw'
+  assign v = product.selected_or_first_available_variant
+-%}
+<article class="card{% unless product.available %} card--soldout{% endunless %}{% if compact %} card--compact{% endif %}"
+  data-handle="{{ product.handle }}" data-product-id="{{ product.id }}" data-variant-id="{{ v.id }}"
+  {%- capture ga -%}{"item_id":"{{ v.id }}","item_name":{{ product.title | json }},"item_category":{{ category | json }},"price":{{ v.price | divided_by: 100.0 }},"discount":{{ v.compare_at_price | minus: v.price | at_least: 0 | divided_by: 100.0 }},"item_brand":{{ product.vendor | json }}}{%- endcapture %}
+  data-ga="{{ ga | escape }}">
+  <div class="card__mediawrap">
+    <a class="card__media media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- render 'image', image: primary, sizes: sizes, alt: name, eager: eager, max: 1200 -%}
+      {%- if secondary -%}{%- render 'image', image: secondary, sizes: sizes, alt: '', max: 1200, class: 'card__alt' -%}{%- endif -%}
+    </a>
+    <div class="card__badges">
+      {%- if product.available == false -%}
+        <span class="badge badge--muted">{{ 'products.unavailable_online' | t }}</span>
+      {%- elsif product.tags contains 'nouveau' -%}
+        <span class="badge badge--dot">{{ 'products.new' | t }}</span>
+      {%- elsif mf.customizable.value == true -%}
+        <span class="badge">{{ 'products.custom' | t }}</span>
+      {%- endif -%}
+    </div>
+    <button class="icon-btn card__wish" type="button" data-wish="{{ product.handle }}" aria-pressed="false"
+      aria-label="{{ 'wishlist.add_label' | t: name: name | escape }}">{% render 'icon', name: 'heart' %}</button>
+    {%- if product.available -%}
+      <button class="card__quick" type="button" data-quick="{{ product.handle }}">{% render 'icon', name: 'eye' %}{{ 'products.quick_view' | t }}</button>
+    {%- endif -%}
+  </div>
+  <div class="card__body">
+    {%- if category != blank -%}<p class="card__cat label">{{ category }}</p>{%- endif -%}
+    <h3 class="card__title"><a href="{{ product.url }}">{{ name }}</a></h3>
+    {%- if tagline != blank and compact != true -%}<p class="card__tl">{{ tagline }}</p>{%- endif -%}
+    {%- if mf.dimensions != blank -%}<p class="card__dims">{{ mf.dimensions.value }}</p>{%- endif -%}
+    <p class="card__price">{% render 'price', product: product %}</p>
+  </div>
+</article>

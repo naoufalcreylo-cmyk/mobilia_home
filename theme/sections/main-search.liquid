@@ -1,0 +1,62 @@
+{%- paginate search.results by 24 -%}
+<header class="plp-head plp-head--noimg"><div class="container">
+  <ol class="crumbs" role="list" aria-label="{{ 'accessibility.breadcrumb' | t }}"><li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li><li><span aria-current="page">{{ 'search.title' | t }}</span></li></ol>
+  <div class="plp-head__grid"><div class="plp-head__copy">
+    <p class="label" style="color:var(--taupe);margin-bottom:1rem">{{ 'search.title' | t }}</p>
+    {%- if search.performed -%}
+      <h1 class="h1 plp-head__title">« {{ search.terms | escape }} »<sup>{{ search.results_count }}</sup></h1>
+    {%- else -%}
+      <h1 class="h1">{{ 'search.title' | t }}</h1>
+    {%- endif -%}
+    <form action="{{ routes.search_url }}" method="get" role="search" style="margin-top:1.5rem;display:flex;gap:.5rem;max-width:560px">
+      <input type="hidden" name="type" value="product">
+      <label class="visually-hidden" for="search-page-q">{{ 'search.label' | t }}</label>
+      <input class="input" id="search-page-q" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.label' | t }}">
+      <button class="btn" type="submit">{{ 'search.submit' | t }}</button>
+    </form>
+  </div></div>
+</div></header>
+
+{%- if search.performed -%}
+<div class="toolbar"><div class="container toolbar__inner">
+  <button class="toolbar__filter" type="button" data-filters-toggle aria-controls="filters" aria-expanded="true">{% render 'icon', name: 'filter' %}<span data-filter-label>{{ 'facets.title' | t }}</span></button>
+  <span class="toolbar__count" data-plp-count aria-live="polite">{{ 'collections.count' | t: count: search.results_count }}</span>
+  <div class="toolbar__sort"><label for="sort">{{ 'collections.sort_by' | t }}</label>
+    <select id="sort" name="sort_by" data-sort>{%- for o in search.sort_options -%}<option value="{{ o.value }}"{% if o.value == search.sort_by %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}</select>
+  </div>
+</div></div>
+<div class="container" data-plp data-section-id="{{ section.id }}">
+  <div class="active-filters" data-active-filters>
+    {%- for f in search.filters -%}{%- for v in f.active_values -%}<a class="chip" href="{{ v.url_to_remove }}" data-facet-link>{{ v.label }} {% render 'icon', name: 'close' %}</a>{%- endfor -%}{%- endfor -%}
+  </div>
+  <div class="plp" data-density="4">
+    {% render 'facets', results: search %}
+    <div>
+      <h2 class="visually-hidden">{{ 'collections.products' | t }}</h2>
+      <div class="product-grid" data-plp-grid data-list="search">
+        {%- for item in search.results -%}
+          {%- if item.object_type == 'product' -%}{% render 'product-card', product: item, list: 'search' %}{%- endif -%}
+        {%- else -%}
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="empty-state__mark">{% render 'icon', name: 'search' %}</div>
+            <p class="h3">{{ 'search.no_results' | t: terms: search.terms | escape }}</p>
+            <p>{{ 'search.no_results_hint' | t }}</p>
+            <div class="empty-state__links">{%- for link in linklists[settings.main_menu].links limit: 4 -%}<a class="chip" href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}</div>
+            {%- assign msg = 'search.whatsapp_message' | t: terms: search.terms -%}
+            <a class="btn btn--wa" href="{% render 'whatsapp-url', message: msg %}" target="_blank" rel="noopener" data-wa-context="search_empty">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ 'search.ask_advisor' | t }}</a>
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="plp-more" data-plp-more{% unless paginate.next %} hidden{% endunless %}>
+        {%- if paginate.next -%}<a class="btn btn--ghost" href="{{ paginate.next.url }}" data-load-more>{{ 'collections.load_more' | t }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+<script>window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'view_search_results',search_term:{{ search.terms | json }},results:{{ search.results_count }}});</script>
+{%- endif -%}
+{%- endpaginate -%}
+<script src="{{ 'facets.js' | asset_url }}" defer></script>
+{% schema %}
+{ "name": "Résultats de recherche", "settings": [] }
+{% endschema %}

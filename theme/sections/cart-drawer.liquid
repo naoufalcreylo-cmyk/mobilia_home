@@ -1,0 +1,125 @@
+{%- comment -%}
+  Cart drawer. Rendered statically in layout/theme.liquid and refreshed by assets/cart.js through the
+  Section Rendering API (?sections=cart-drawer) after every add / change — no full page reloads.
+{%- endcomment -%}
+{%- capture nl %}
+{% endcapture -%}
+{%- liquid
+  assign threshold = settings.free_shipping_threshold | times: 100
+  assign saved = 0
+  for item in cart.items
+    if item.variant.compare_at_price > item.variant.price
+      assign line_saved = item.variant.compare_at_price | minus: item.variant.price | times: item.quantity
+      assign saved = saved | plus: line_saved
+    endif
+  endfor
+  assign wa_text = 'whatsapp.order_intro' | t
+  for item in cart.items
+    assign line = item.final_line_price | money | strip_html
+    assign wa_text = wa_text | append: nl | append: '• ' | append: item.product.title | append: ' × ' | append: item.quantity | append: ' — ' | append: line | append: nl | append: '  ' | append: shop.url | append: item.url
+  endfor
+  assign total_txt = cart.total_price | money | strip_html
+  assign wa_text = wa_text | append: nl | append: 'Total : ' | append: total_txt
+  assign wa_number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-'
+-%}
+<div class="drawer" id="cart" aria-hidden="true" data-cart-drawer>
+  <div class="drawer__overlay" data-close></div>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+    <div class="drawer__head">
+      <h2 class="drawer__title" id="cart-title">{{ 'cart.title' | t }}{% if cart.item_count > 0 %}<sup>({{ cart.item_count }})</sup>{% endif %}</h2>
+      <button class="icon-btn" type="button" data-close aria-label="{{ 'cart.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="drawer__body">
+        <div class="empty-state">
+          <div class="empty-state__mark">{% render 'icon', name: 'bag' %}</div>
+          <p class="h3">{{ 'cart.empty_title' | t }}</p>
+          <p>{{ 'cart.empty_text' | t }}</p>
+          <div class="empty-state__links">
+            {%- for link in linklists[settings.main_menu].links limit: 4 -%}<a class="chip" href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}
+          </div>
+        </div>
+      </div>
+      <div class="drawer__foot">
+        <a class="btn btn--wa btn--block" href="{% render 'whatsapp-url', message: settings.help_message %}" target="_blank" rel="noopener" data-wa-context="empty_cart">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ 'cart.talk_to_advisor' | t }}</a>
+      </div>
+    {%- else -%}
+      <div class="drawer__body">
+        {%- if threshold > 0 -%}
+          {%- assign left = threshold | minus: cart.total_price -%}
+          <div class="cart-progress">
+            {%- if left > 0 -%}
+              {%- assign left_money = left | money -%}{{ 'cart.free_shipping_left_html' | t: amount: left_money }}
+            {%- else -%}
+              {% render 'icon', name: 'check', class: 'icon' %} {{ 'cart.free_shipping_reached_html' | t }}
+            {%- endif -%}
+            {%- assign pct = cart.total_price | times: 100 | divided_by: threshold | at_most: 100 -%}
+            <div class="cart-progress__bar" aria-hidden="true"><span style="width: {{ pct }}%"></span></div>
+            {%- if settings.free_shipping_note != blank -%}<small>{{ settings.free_shipping_note }}</small>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <ul role="list" style="list-style:none;margin:0;padding:0">
+          {%- for item in cart.items -%}
+            <li class="cart-line" data-line="{{ forloop.index }}" data-key="{{ item.key }}" data-handle="{{ item.product.handle }}">
+              <a class="media" href="{{ item.url }}">{% render 'image', image: item.image, sizes: '96px', max: 240, alt: '' %}</a>
+              <div>
+                <div class="cart-line__top">
+                  <div>
+                    {%- assign cat = item.product.metafields.mobilia.category.value | default: item.product.type -%}
+                    {%- if cat != blank -%}<p class="label muted" style="font-size:.625rem">{{ cat }}</p>{%- endif -%}
+                    <a class="cart-line__name" href="{{ item.url }}">{{ item.product.title | split: ' – ' | first | split: ' - ' | first }}</a>
+                    {%- unless item.product.has_only_default_variant -%}<p class="cart-line__meta">{{ item.variant.title }}</p>{%- endunless -%}
+                    {%- if item.product.metafields.mobilia.dimensions != blank -%}<p class="cart-line__meta">{{ item.product.metafields.mobilia.dimensions.value }}</p>{%- endif -%}
+                  </div>
+                  <div class="cart-line__price">
+                    <span class="price">{{ item.final_line_price | money }}</span>
+                    {%- if item.variant.compare_at_price > item.variant.price -%}<s class="price price--compare small">{{ item.variant.compare_at_price | times: item.quantity | money }}</s>{%- endif -%}
+                  </div>
+                </div>
+                <div class="cart-line__bottom">
+                  <div class="qty qty--sm">
+                    <button type="button" data-qty="-1" aria-label="{{ 'cart.decrease' | t: name: item.product.title | escape }}">{% render 'icon', name: 'minus', class: 'icon' %}</button>
+                    <input type="number" min="0" max="99" value="{{ item.quantity }}" aria-label="{{ 'cart.quantity' | t: name: item.product.title | escape }}" data-qty-input>
+                    <button type="button" data-qty="1" aria-label="{{ 'cart.increase' | t: name: item.product.title | escape }}">{% render 'icon', name: 'plus', class: 'icon' %}</button>
+                  </div>
+                  <button class="cart-line__remove" type="button" data-remove>{{ 'cart.remove' | t }}</button>
+                </div>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- comment -%} One discreet complement, from the first line's curated complements metafield {%- endcomment -%}
+        {%- assign first = cart.items.first.product -%}
+        {%- assign suggestion = nil -%}
+        {%- for p in first.metafields.mobilia.complements.value -%}
+          {%- assign in_cart = false -%}
+          {%- for item in cart.items -%}{%- if item.product_id == p.id -%}{%- assign in_cart = true -%}{%- endif -%}{%- endfor -%}
+          {%- if p.available and in_cart == false -%}{%- assign suggestion = p -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+        {%- if suggestion -%}
+          <div class="cart-upsell">
+            <h3 class="label">{{ 'cart.complete' | t }}</h3>
+            <div class="cart-upsell__item">
+              <a class="media" href="{{ suggestion.url }}">{% render 'image', image: suggestion.featured_media.preview_image, sizes: '64px', max: 240, alt: '' %}</a>
+              <p>{{ suggestion.title | split: ' – ' | first }}<br><span class="price">{{ suggestion.price | money }}</span></p>
+              <button class="icon-btn" type="button" data-add-variant="{{ suggestion.selected_or_first_available_variant.id }}" data-list="cart_upsell" aria-label="{{ 'cart.add_item' | t: name: suggestion.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="drawer__foot">
+        <div class="cart-sum"><span>{{ 'cart.subtotal' | t }}</span><span class="price">{{ cart.total_price | money }}</span></div>
+        {%- if saved > 0 -%}{%- assign saved_money = saved | money -%}<p class="cart-save">{{ 'cart.you_save' | t: amount: saved_money }}</p>{%- endif -%}
+        <p class="cart-note">{{ 'cart.taxes_note' | t }}</p>
+        <form class="cart-actions" action="{{ routes.cart_url }}" method="post">
+          <button class="btn btn--block" type="submit" name="checkout" data-checkout>{{ 'cart.checkout' | t }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</button>
+          <a class="btn btn--wa btn--block" href="https://wa.me/{{ wa_number }}?text={{ wa_text | url_encode }}" target="_blank" rel="noopener" data-wa-context="cart">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ 'cart.order_whatsapp' | t }}</a>
+        </form>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

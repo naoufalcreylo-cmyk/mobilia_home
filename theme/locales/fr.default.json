@@ -1,0 +1,190 @@
+{
+  "general": {
+    "home": "Accueil",
+    "close": "Fermer",
+    "page": "Page {{ page }}",
+    "pagination": "Pagination",
+    "tagged_with": "Mots-clés : {{ tags }}"
+  },
+  "accessibility": {
+    "skip_to_content": "Aller au contenu",
+    "breadcrumb": "Fil d’Ariane"
+  },
+  "announcement": {
+    "label": "Annonces",
+    "previous": "Annonce précédente",
+    "next": "Annonce suivante"
+  },
+  "header": {
+    "menu": "Menu",
+    "close_menu": "Fermer le menu",
+    "main_nav": "Navigation principale",
+    "see_all": "Tout l’univers {{ name }}",
+    "stores": "Magasins",
+    "account": "Mon compte",
+    "advice_whatsapp": "Conseil déco sur WhatsApp"
+  },
+  "help": {
+    "label": "Aide",
+    "short": "Besoin d’aide ?",
+    "button": "Besoin d’aide ? Écrire sur WhatsApp"
+  },
+  "hero": { "rooms": "Pièces de vie" },
+  "rooms": {
+    "pieces": {
+      "one": "{{ count }} pièce",
+      "other": "{{ count }} pièces"
+    }
+  },
+  "campaign": { "up_to": "jusqu’à" },
+  "outlet": { "from": "dès" },
+  "looks": {
+    "in_scene": "Dans la scène",
+    "pair": "À associer",
+    "view": "Voir {{ name }}",
+    "add_set": "Ajouter l’ensemble au panier",
+    "set": {
+      "one": "L’ensemble, {{ count }} pièce",
+      "other": "L’ensemble, {{ count }} pièces"
+    }
+  },
+  "blog": { "all_articles": "Tous les articles" },
+  "stores": {
+    "all": "Toutes",
+    "filter": "Filtrer par ville",
+    "directions": "Itinéraire",
+    "notify_visit": "Prévenir de ma visite",
+    "visit_message": "Bonjour Mobilia, je souhaite passer au showroom {{ store }} ({{ city }}).",
+    "empty": "Ajoutez vos showrooms dans Contenu > Métaobjets > Store."
+  },
+  "products": {
+    "new": "Nouveau",
+    "custom": "Sur mesure",
+    "unavailable_online": "Indisponible en ligne",
+    "quick_view": "Aperçu rapide",
+    "regular_price": "Prix initial",
+    "you_save": "Vous économisez {{ amount }}",
+    "you_save_html": "Vous économisez <b>{{ amount }}</b>",
+    "add_to_cart": "Ajouter au panier",
+    "sold_out": "Indisponible",
+    "order_whatsapp": "Commander sur WhatsApp",
+    "notify_whatsapp": "Être prévenu sur WhatsApp",
+    "view_details": "Voir tous les détails",
+    "see_collection": "Voir toute la collection",
+    "all_models": "Tous les modèles",
+    "dimensions": "Dimensions",
+    "materials": "Matières",
+    "care": "Entretien",
+    "warranty": "Garantie & SAV",
+    "quantity": "Quantité",
+    "increase": "Augmenter la quantité",
+    "decrease": "Diminuer la quantité",
+    "zoom": "Agrandir les photos",
+    "gallery": "Galerie photos, {{ count }} médias",
+    "photos_of": "Photos : {{ name }}",
+    "photo_n": "Photo {{ n }}",
+    "previous_photo": "Photo précédente",
+    "next_photo": "Photo suivante",
+    "credit_link": "se renseigner",
+    "credit_message": "Bonjour Mobilia, je souhaite des informations sur le crédit pour : {{ title }}",
+    "quote_message": "Bonjour Mobilia, je souhaite un devis sur mesure pour : {{ title }}. Mes dimensions : …",
+    "compose_message": "Bonjour Mobilia, je m’intéresse à {{ title }}. Pouvez-vous m’aider à composer la pièce ?"
+  },
+  "collections": {
+    "count": {
+      "one": "{{ count }} produit",
+      "other": "{{ count }} produits"
+    },
+    "sort_by": "Trier par",
+    "density": "Affichage de la grille",
+    "large_tiles": "Grandes vignettes",
+    "standard_tiles": "Vignettes standard",
+    "products": "Produits",
+    "subnav": "Sous-catégories",
+    "load_more": "Voir plus de produits",
+    "progress": "{{ shown }} sur {{ total }} produits",
+    "tile_message": "Bonjour Mobilia, j’hésite dans la catégorie « {{ name }} ». Pouvez-vous me conseiller ?",
+    "empty_title": "Cette collection se renouvelle.",
+    "empty_text": "Nos nouvelles pièces arrivent bientôt. Découvrez en attendant le reste du catalogue.",
+    "browse_all": "Voir tout le catalogue"
+  },
+  "facets": {
+    "title": "Filtrer",
+    "close": "Fermer les filtres",
+    "clear": "Effacer les filtres",
+    "clear_all": "Tout effacer",
+    "remove": "Retirer le filtre {{ name }}",
+    "from": "Prix minimum",
+    "to": "Prix maximum",
+    "price_hint": "En dirhams",
+    "show_results": "Voir les résultats",
+    "no_results_title": "Aucune pièce ne correspond à ces filtres.",
+    "no_results_text": "Retirez un filtre ou élargissez la fourchette de prix pour voir plus de résultats."
+  },
+  "search": {
+    "title": "Recherche",
+    "label": "Rechercher un meuble",
+    "submit": "Rechercher",
+    "close": "Fermer la recherche",
+    "popular": "Recherches populaires",
+    "categories": "Catégories",
+    "suggestions": "Suggestions",
+    "products": "Produits",
+    "view_all": "Voir tous les résultats",
+    "no_results": "Aucun résultat pour « {{ terms }} ».",
+    "no_results_hint": "Vérifiez l’orthographe, essayez un terme plus général, ou décrivez-nous ce que vous cherchez.",
+    "ask_advisor": "Demander à un conseiller",
+    "whatsapp_message": "Bonjour Mobilia, je recherche : {{ terms }}"
+  },
+  "cart": {
+    "title": "Panier",
+    "close": "Fermer le panier",
+    "empty_title": "Votre panier attend sa première pièce.",
+    "empty_text": "Commencez par une pièce de vie, ou laissez-nous vous conseiller.",
+    "talk_to_advisor": "Parler à un conseiller",
+    "free_shipping_left_html": "Plus que <strong>{{ amount }}</strong> pour la livraison offerte.",
+    "free_shipping_reached_html": "<strong>Livraison offerte</strong> dans un rayon de 25 km.",
+    "quantity": "Quantité {{ name }}",
+    "increase": "Augmenter la quantité de {{ name }}",
+    "decrease": "Diminuer la quantité de {{ name }}",
+    "remove": "Supprimer",
+    "complete": "Pour compléter",
+    "add_item": "Ajouter {{ name }} au panier",
+    "subtotal": "Sous-total",
+    "you_save": "Vous économisez {{ amount }}",
+    "taxes_note": "Livraison et montage calculés à la validation. Paiement sécurisé, virement ou en magasin.",
+    "checkout": "Finaliser la commande",
+    "order_whatsapp": "Commander sur WhatsApp",
+    "update": "Mettre à jour",
+    "error": "Impossible de mettre à jour le panier. Merci de réessayer."
+  },
+  "wishlist": {
+    "title": "Favoris",
+    "add_label": "Ajouter aux favoris : {{ name }}",
+    "add_short": "Ajouter à mes favoris",
+    "added": "Ajouté à vos favoris",
+    "removed": "Retiré de vos favoris",
+    "empty_title": "Aucun favori pour l’instant.",
+    "empty_text": "Touchez le cœur sur une pièce pour la retrouver ici, et la partager avec vos proches.",
+    "share": "Partager ma sélection sur WhatsApp",
+    "share_message": "Voici ma sélection Mobilia :"
+  },
+  "whatsapp": {
+    "order_intro": "Bonjour Mobilia, je souhaite commander :",
+    "quantity": "Quantité : {{ quantity }}"
+  },
+  "newsletter": {
+    "email": "Votre adresse e-mail",
+    "subscribe": "S’inscrire",
+    "success": "Merci ! Votre inscription est bien enregistrée."
+  },
+  "footer": {
+    "rights": "Tous droits réservés.",
+    "customer_service": "Service client",
+    "payment_methods": "Moyens de paiement"
+  },
+  "errors": {
+    "not_found_title": "Cette page est introuvable.",
+    "not_found_text": "Elle a peut-être été déplacée. Retrouvez toutes nos pièces par univers."
+  }
+}

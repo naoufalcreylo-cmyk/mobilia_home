@@ -1,0 +1,25 @@
+{%- comment -%} Fetched by theme.js: {{ product.url }}?section_id=quick-view {%- endcomment -%}
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+  assign mf = product.metafields.mobilia
+  assign name = mf.display_name.value | default: product.title
+-%}
+<div class="media qv__media">{% render 'image', image: product.featured_media.preview_image, sizes: '(min-width:768px) 50vw, 100vw', max: 1200, alt: name %}</div>
+<div class="qv__info" data-product-json="{{ product.handle }}">
+  <p class="label" style="color:var(--taupe)">{{ mf.category.value | default: product.type }}</p>
+  <h2 class="h2" id="qv-title">{{ name }}</h2>
+  {%- if mf.dimensions != blank -%}<p class="pdp__dims">{% render 'icon', name: 'dims' %}{{ mf.dimensions.value }}</p>{%- endif -%}
+  <div class="pdp__price">{% render 'price', product: product, show_off: false %}</div>
+  {%- if v.compare_at_price > v.price -%}
+    {%- assign save = v.compare_at_price | minus: v.price | money -%}
+    <p class="pdp__save">{{ 'products.you_save_html' | t: amount: save }}</p>
+  {%- endif -%}
+  <div class="cart-actions" style="margin-top:.5rem">
+    <button class="btn btn--block" type="button" data-add-variant="{{ v.id }}" data-list="quick_view"{% unless v.available %} disabled{% endunless %}>{{ 'products.add_to_cart' | t }}</button>
+    <a class="btn btn--wa btn--block" href="{% render 'whatsapp-url', product: product %}" target="_blank" rel="noopener" data-wa-context="quick_view">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ 'products.order_whatsapp' | t }}</a>
+  </div>
+  <a class="link-arrow" href="{{ product.url }}">{{ 'products.view_details' | t }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a>
+</div>
+{% schema %}
+{ "name": "Aperçu rapide", "settings": [] }
+{% endschema %}

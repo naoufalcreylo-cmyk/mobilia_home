@@ -1,0 +1,17 @@
+{%- comment -%} Filled client-side from localStorage (handles), each card rendered by sections/card-render. {%- endcomment -%}
+<section class="section" aria-labelledby="recent-{{ section.id }}" data-recently-viewed data-exclude="{{ product.handle }}" hidden>
+  <div class="container">
+    <div class="section-head"><div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2" id="recent-{{ section.id }}">{{ section.settings.title }}</h2></div></div>
+    <div class="product-grid" data-recent-grid data-list="recently_viewed"></div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Vus récemment",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Votre parcours" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Vus <em>récemment</em>." }
+  ],
+  "presets": [{ "name": "Vus récemment" }]
+}
+{% endschema %}

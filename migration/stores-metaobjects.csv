@@ -1,0 +1,5 @@
+﻿Handle,Command,Definition: Handle,Field: name,Field: city,Field: tag,Field: address,Field: phones,Field: opening_hours,Field: map_url
+bourgogne,MERGE,store,Bourgogne,Casablanca,Showroom,"Av. Dr Med Sijilmassi (ex av. du Phare), Bourgogne","[""0661 05 47 64"",""0522 20 27 79""]",,
+ghandi,MERGE,store,Boulevard Ghandi,Casablanca,Showroom,"230, Boulevard Ghandi","[""0661 05 47 66""]",,
+roches-noires,MERGE,store,Roches Noires,Casablanca,Outlet,"315, Av. Ambassadeur Ben Aicha, Quartier Roches Noires","[""06 62 22 63 69""]",,
+agdal,MERGE,store,Agdal,Rabat,Showroom,"15, Avenue Hassan II, Résidence Meriam, Agdal","[""0662 05 18 00"",""0674 06 09 35""]",,

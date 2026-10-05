@@ -1,0 +1,19 @@
+{
+  "type": "footer",
+  "name": "Groupe pied de page",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "c1": { "type": "menu", "settings": { "heading": "Collections", "menu": "footer-collections" } },
+        "c2": { "type": "menu", "settings": { "heading": "Mobilia", "menu": "footer-mobilia" } },
+        "c3": { "type": "menu", "settings": { "heading": "Services", "menu": "footer-services" } },
+        "c4": { "type": "menu", "settings": { "heading": "Aide", "menu": "footer-aide" } },
+        "c5": { "type": "contact", "settings": { "heading": "Nous contacter" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4", "c5"],
+      "settings": { "legal_menu": "footer", "extra_payments": "Virement, En magasin" }
+    }
+  },
+  "order": ["footer"]
+}

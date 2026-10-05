@@ -1,0 +1,29 @@
+<section class="final on-dark" aria-labelledby="final-{{ section.id }}">
+  <div class="media">{%- assign fimg = section.settings.image | default: section.settings.image_product.featured_media.preview_image -%}{% render 'image', image: fimg, sizes: '100vw', max: 2000, alt: '' %}</div>
+  <div class="container final__inner">
+    <span class="label" style="color:var(--saffron)">{{ section.settings.eyebrow }}</span>
+    <h2 class="h1" id="final-{{ section.id }}">{{ section.settings.title }}</h2>
+    <p class="body-l">{{ section.settings.text }}</p>
+    <div class="final__ctas">
+      <a class="btn btn--light" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a>
+      <a class="btn btn--outline-light" href="{% render 'whatsapp-url', message: section.settings.whatsapp_message %}" target="_blank" rel="noopener" data-wa-context="final_cta">{% render 'icon', name: 'whatsapp' %}{{ section.settings.cta2_label }}</a>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Appel à l’action final",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image de fond" },
+    { "type": "product", "id": "image_product", "label": "…ou photo d’un produit" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Mobilia Home" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Votre intérieur commence <em>ici</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Découvrez nos collections ou parlez à l’un de nos conseillers : nous vous répondons sur WhatsApp." },
+    { "type": "text", "id": "cta_label", "label": "Bouton principal", "default": "Découvrir les collections" },
+    { "type": "url", "id": "cta_link", "label": "Lien principal" },
+    { "type": "text", "id": "cta2_label", "label": "Bouton WhatsApp", "default": "Parler à un conseiller" },
+    { "type": "textarea", "id": "whatsapp_message", "label": "Message WhatsApp", "default": "Bonjour Mobilia, j’aimerais être conseillé(e) pour mon intérieur." }
+  ],
+  "presets": [{ "name": "Appel à l’action final" }]
+}
+{% endschema %}

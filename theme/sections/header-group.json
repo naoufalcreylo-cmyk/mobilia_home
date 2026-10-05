@@ -1,0 +1,31 @@
+{
+  "type": "header",
+  "name": "Groupe en-tête",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "m1": { "type": "message", "settings": { "text": "Livraison express <strong>sous 48h</strong>, partout au Maroc", "link": "shopify://pages/nos-services" } },
+        "m2": { "type": "message", "settings": { "text": "Super Deals : jusqu’à <strong>−{max_discount} %</strong> sur une sélection", "link": "shopify://collections/super-deals" } },
+        "m3": { "type": "message", "settings": { "text": "Montage <strong>offert</strong> par nos menuisiers", "link": "shopify://pages/nos-services" } },
+        "m4": { "type": "message", "settings": { "text": "Crédit gratuit — renseignez-vous auprès de nos conseillers", "link": "shopify://pages/nos-services" } }
+      },
+      "block_order": ["m1", "m2", "m3", "m4"],
+      "settings": { "discount_collection": "super-deals", "side_label": "Nos magasins", "side_link": "/#magasins" }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "v1": { "type": "mega_visual", "settings": { "menu_item": "Salon", "collection": "salons-d-angle-sur-mesure", "eyebrow": "Sur mesure", "title": "Salons d’angle personnalisables" } },
+        "v2": { "type": "mega_visual", "settings": { "menu_item": "Salon", "collection": "canape-sofa", "eyebrow": "Assises", "title": "Canapés & sofas" } },
+        "v3": { "type": "mega_visual", "settings": { "menu_item": "Salle à manger", "collection": "table-a-manger-1", "eyebrow": "Tables & chaises", "title": "Recevoir autour d’une belle table" } },
+        "v4": { "type": "mega_visual", "settings": { "menu_item": "Chambre", "collection": "lits-adulte-1", "eyebrow": "Chambre adulte", "title": "Des lits pensés pour le repos" } },
+        "v5": { "type": "mega_visual", "settings": { "menu_item": "Chambre", "collection": "lits-enfants", "eyebrow": "Chambre enfant", "title": "Lit enfant & junior" } },
+        "v6": { "type": "mega_visual", "settings": { "menu_item": "Rangement", "collection": "rangements", "eyebrow": "Rangement", "title": "Ranger avec style" } }
+      },
+      "block_order": ["v1", "v2", "v3", "v4", "v5", "v6"],
+      "settings": { "menu": "main-menu", "logo_width": 132, "accent_item": "Outlet", "stores_link": "/#magasins" }
+    }
+  },
+  "order": ["announcement", "header"]
+}

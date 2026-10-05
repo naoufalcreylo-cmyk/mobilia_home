@@ -1,0 +1,59 @@
+<section class="section" id="services" aria-labelledby="serv-{{ section.id }}">
+  <div class="container">
+    <div class="section-head">
+      <div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2 section-head__title" id="serv-{{ section.id }}">{{ section.settings.title }}</h2></div>
+      {%- if section.settings.text != blank -%}<div class="section-head__aside">{{ section.settings.text }}</div>{%- endif -%}
+    </div>
+    <div class="services__grid">
+      {%- for block in section.blocks -%}
+        <div class="service{% if block.settings.feature %} service--feature{% endif %}" {{ block.shopify_attributes }}>
+          {% render 'icon', name: block.settings.icon %}
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.text }}</p>
+          {%- if block.settings.link_label != blank -%}
+            {%- if block.settings.whatsapp_message != blank -%}
+              <a class="link-arrow" href="{% render 'whatsapp-url', message: block.settings.whatsapp_message %}" target="_blank" rel="noopener" data-wa-context="service">{{ block.settings.link_label }} {% render 'icon', name: 'arrow' %}</a>
+            {%- else -%}
+              <a class="link-arrow" href="{{ block.settings.link }}">{{ block.settings.link_label }} {% render 'icon', name: 'arrow' %}</a>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Services",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Nos services" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Bien plus qu’un <em>meuble</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "De la livraison express au conseil en décoration, nous vous accompagnons jusqu’à l’installation." }
+  ],
+  "blocks": [
+    { "type": "service", "name": "Service", "limit": 8, "settings": [
+      { "type": "select", "id": "icon", "label": "Icône", "default": "truck", "options": [
+        { "value": "truck", "label": "Livraison" }, { "value": "pin", "label": "Lieu" }, { "value": "tool", "label": "Montage" },
+        { "value": "spark", "label": "Décoration" }, { "value": "card", "label": "Paiement / crédit" }, { "value": "ruler", "label": "Sur mesure" },
+        { "value": "gift", "label": "Cadeau / liste" }, { "value": "chat", "label": "Service client" }, { "value": "shield", "label": "Garantie" }, { "value": "store", "label": "Magasin" }
+      ] },
+      { "type": "text", "id": "title", "label": "Titre" },
+      { "type": "textarea", "id": "text", "label": "Texte" },
+      { "type": "checkbox", "id": "feature", "label": "Mettre en avant (fond sombre)", "default": false },
+      { "type": "text", "id": "link_label", "label": "Lien — texte" },
+      { "type": "url", "id": "link", "label": "Lien — URL" },
+      { "type": "textarea", "id": "whatsapp_message", "label": "…ou message WhatsApp pré-rempli" }
+    ] }
+  ],
+  "presets": [{ "name": "Services", "blocks": [
+    { "type": "service", "settings": { "icon": "truck", "title": "Livraison express", "text": "Recevez vos achats sous 48h, qu’ils soient effectués en magasin ou en ligne. Livraison partout au Maroc." } },
+    { "type": "service", "settings": { "icon": "pin", "title": "Livraison offerte", "text": "Gratuite dans un rayon de 25 km dès 2 500 DH d’achat." } },
+    { "type": "service", "settings": { "icon": "tool", "title": "Montage gratuit", "text": "Une équipe de techniciens menuisiers formés et expérimentés installe votre mobilier." } },
+    { "type": "service", "settings": { "icon": "spark", "title": "Home Décor", "text": "Un service conseil en décoration adapté à tous les budgets.", "feature": true, "link_label": "Prendre conseil", "whatsapp_message": "Bonjour Mobilia, je souhaite bénéficier du service Home Décor." } },
+    { "type": "service", "settings": { "icon": "card", "title": "Crédit gratuit", "text": "Crédits gratuits ou classiques à taux très intéressants, avec des organismes de crédit de renom." } },
+    { "type": "service", "settings": { "icon": "ruler", "title": "Sur mesure", "text": "Salons d’angle et packs chambre personnalisables : dimensions, coloris, tissus anti-taches." } },
+    { "type": "service", "settings": { "icon": "gift", "title": "My Wishlist", "text": "Mariage, naissance, anniversaire : ouvrez votre liste et profitez de −5 % sur les achats de vos proches, et d’un bon cadeau surprise." } },
+    { "type": "service", "settings": { "icon": "chat", "title": "À votre écoute", "text": "Une question, une réclamation ? Notre service client répond au 06 61 05 47 64 et sur WhatsApp." } }
+  ] }]
+}
+{% endschema %}

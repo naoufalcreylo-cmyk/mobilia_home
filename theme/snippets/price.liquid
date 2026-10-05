@@ -1,0 +1,17 @@
+{%- comment -%}
+  Elegant price hierarchy: price · compare-at · discount. Params: product (or variant), show_off (bool, default true), size ('lg')
+{%- endcomment -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign price = target.price
+  assign compare = target.compare_at_price
+  assign show_off = show_off | default: true
+-%}
+<span class="price">{{ price | money }}</span>
+{%- if compare > price -%}
+  <s class="price price--compare"><span class="visually-hidden">{{ 'products.regular_price' | t }} </span>{{ compare | money }}</s>
+  {%- if show_off -%}
+    {%- assign off = compare | minus: price | times: 100 | divided_by: compare -%}
+    {%- if off >= 5 -%}<span class="card__off">−{{ off }}&nbsp;%</span>{%- endif -%}
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,110 @@
+{
+  "sections": {
+    "main": {
+      "type": "rooms-grid",
+      "settings": {
+        "eyebrow": "Catalogue",
+        "title": "Toutes nos <em>collections</em>.",
+        "text": ""
+      },
+      "blocks": {
+        "room_1": {
+          "type": "room",
+          "settings": {
+            "title": "Salon",
+            "collection": "salons-d-angle-sur-mesure",
+            "extra_collections": [
+              "salons-d-angle-sur-mesure",
+              "salon-en-u",
+              "salon-marocain",
+              "salon-3-2-1",
+              "canape-sofa",
+              "canapes-clic-clac",
+              "meridienne-1",
+              "fauteuil-1",
+              "poufs"
+            ],
+            "image_product": "salon-angle-lumia-400x220-panoramique-bois-massif"
+          }
+        },
+        "room_2": {
+          "type": "room",
+          "settings": {
+            "title": "Salle à manger",
+            "collection": "table-a-manger-1",
+            "extra_collections": [
+              "table-a-manger-1",
+              "chaises-1",
+              "buffets",
+              "console-1"
+            ],
+            "image_product": "table-a-manger-ronde-avec-6-chaises"
+          }
+        },
+        "room_3": {
+          "type": "room",
+          "settings": {
+            "title": "Chambre",
+            "collection": "lits-adulte-1",
+            "extra_collections": [
+              "lits-adulte-1",
+              "chevet",
+              "commode-1",
+              "matelas"
+            ],
+            "image_product": "lit-terracotta-design-audacieux-confort-premium"
+          }
+        },
+        "room_4": {
+          "type": "room",
+          "settings": {
+            "title": "Rangement",
+            "collection": "armoire-1",
+            "extra_collections": [
+              "armoire-1",
+              "meuble-a-chaussures-1",
+              "petit-rangement-1",
+              "rangements"
+            ],
+            "image_product": "buffet-1"
+          }
+        },
+        "room_5": {
+          "type": "room",
+          "settings": {
+            "title": "Chambre enfant",
+            "collection": "lits-enfants",
+            "extra_collections": [
+              "lits-enfants",
+              "bureaux-enfants",
+              "chaises-de-bureaux"
+            ],
+            "image_product": "lit-enfant-tapisse-arc-en-ciel-90x200-multicolore"
+          }
+        },
+        "room_6": {
+          "type": "room",
+          "settings": {
+            "title": "Jardin",
+            "collection": "espace-dexterieur",
+            "extra_collections": [
+              "espace-dexterieur"
+            ],
+            "image_product": "salon-dexterieur-belen"
+          }
+        }
+      },
+      "block_order": [
+        "room_1",
+        "room_2",
+        "room_3",
+        "room_4",
+        "room_5",
+        "room_6"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

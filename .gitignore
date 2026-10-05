@@ -1,0 +1,15 @@
+node_modules/
+qa/
+# curation contact sheets & scratch images
+tools/*.png
+tools/*.jpg
+tools/sheet*.html
+tools/sheet-map*.json
+# raw scraped pages/images (scripts only need collections.json, cols/, all.json)
+tools/research/*.html
+tools/research/*.jpg
+tools/research/*.png
+tools/research/pimg/
+tools/research/p[0-9].json
+tools/research/products.json
+tools/research/handles.txt

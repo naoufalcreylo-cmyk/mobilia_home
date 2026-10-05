@@ -1,0 +1,72 @@
+{%- comment -%}
+  Outlet teaser on a dark ground, kept separate from the main brand. Instead of discount imagery it lists
+  what the outlet actually holds: product type, number of pieces, lowest price — computed from the
+  collection. Rows link to the collection filtered by product type (Search & Discovery filter).
+{%- endcomment -%}
+{%- liquid
+  assign c = section.settings.collection
+  assign max_off = 0
+  assign types = ''
+  for p in c.products limit: 250
+    if p.available and p.type != blank
+      assign types = types | append: p.type | append: '|'
+      assign v = p.selected_or_first_available_variant
+      if v.compare_at_price > v.price
+        assign off = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price
+        if off > max_off
+          assign max_off = off
+        endif
+      endif
+    endif
+  endfor
+  assign type_list = types | split: '|' | uniq
+-%}
+<section class="section section--night outlet on-dark" aria-labelledby="outlet-{{ section.id }}">
+  <div class="outlet__word" aria-hidden="true">{{ section.settings.watermark }}</div>
+  <div class="container outlet__grid">
+    <div class="outlet__copy">
+      <span class="label">{{ section.settings.eyebrow }}{% if max_off >= 10 %} · {{ 'campaign.up_to' | t }} −{{ max_off }} %{% endif %}</span>
+      <h2 class="h1" id="outlet-{{ section.id }}">{{ section.settings.title }}</h2>
+      <p>{{ section.settings.text }}</p>
+      {%- if section.settings.address != blank -%}<p class="outlet__addr">{% render 'icon', name: 'pin' %}<span>{{ section.settings.address }}</span></p>{%- endif -%}
+      <a class="btn btn--saffron" href="{{ c.url }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a>
+    </div>
+    <ul class="outlet__index" role="list">
+      {%- assign rows = 0 -%}
+      {%- for t in type_list -%}
+        {%- liquid
+          assign n = 0
+          assign min = 999999999
+          for p in c.products limit: 250
+            if p.available and p.type == t
+              assign n = n | plus: 1
+              if p.price < min
+                assign min = p.price
+              endif
+            endif
+          endfor
+        -%}
+        <li><a href="{{ c.url }}?filter.p.product_type={{ t | url_encode }}">
+          <span class="outlet__cat">{{ t }}</span><span class="outlet__n">{{ 'rooms.pieces' | t: count: n }}</span>
+          <span class="outlet__from">{{ 'outlet.from' | t }} <b>{{ min | money }}</b></span>{% render 'icon', name: 'arrow' %}</a></li>
+        {%- assign rows = rows | plus: 1 -%}{%- if rows == section.settings.rows -%}{%- break -%}{%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Outlet",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection Outlet" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Mobilia Outlet" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Les belles pièces. Les derniers <em>prix</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Fins de séries et pièces d’exposition à prix réduits, à découvrir en ligne et dans notre showroom de Roches Noires." },
+    { "type": "textarea", "id": "address", "label": "Adresse affichée", "default": "315, Av. Ambassadeur Ben Aicha, Quartier Roches Noires, Casablanca" },
+    { "type": "text", "id": "watermark", "label": "Mot en filigrane", "default": "Outlet" },
+    { "type": "range", "id": "rows", "label": "Nombre de catégories", "min": 3, "max": 10, "step": 1, "default": 6 },
+    { "type": "text", "id": "cta_label", "label": "Bouton", "default": "Découvrir l’Outlet" }
+  ],
+  "presets": [{ "name": "Outlet" }]
+}
+{% endschema %}

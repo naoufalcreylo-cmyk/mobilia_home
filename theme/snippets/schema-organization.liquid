@@ -1,0 +1,42 @@
+{%- comment -%}
+  Organization on every page; FurnitureStore (LocalBusiness) per showroom from the "store" metaobjects.
+  Nothing is emitted for data that is not filled in (e.g. opening hours).
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  {%- if settings.logo -%}"logo": {{ settings.logo | image_url: width: 600 | prepend: 'https:' | json }},{%- endif -%}
+  "sameAs": [{%- liquid
+    assign socials = settings.social_instagram | append: '|' | append: settings.social_facebook | append: '|' | append: settings.social_tiktok | append: '|' | append: settings.social_youtube | split: '|' | compact
+    assign first = true
+    for s in socials
+      if s != blank
+        unless first
+          echo ','
+        endunless
+        echo s | json
+        assign first = false
+      endif
+    endfor
+  -%}],
+  "contactPoint": [{ "@type": "ContactPoint", "telephone": {{ settings.phone_e164 | json }}, "contactType": "customer service", "areaServed": "MA", "availableLanguage": ["fr", "ar"] }]
+}
+</script>
+{%- if template.name == 'index' -%}
+  {%- for store in shop.metaobjects.store.values -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FurnitureStore",
+      "name": {{ shop.name | append: ' ' | append: store.name | json }},
+      "url": {{ shop.url | json }},
+      "address": { "@type": "PostalAddress", "streetAddress": {{ store.address | json }}, "addressLocality": {{ store.city | json }}, "addressCountry": "MA" }
+      {%- if store.phones != blank -%},"telephone": {{ store.phones.value | json }}{%- endif -%}
+      {%- if store.opening_hours != blank -%},"openingHours": {{ store.opening_hours.value | json }}{%- endif -%}
+    }
+    </script>
+  {%- endfor -%}
+{%- endif -%}

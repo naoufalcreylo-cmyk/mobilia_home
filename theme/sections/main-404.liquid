@@ -1,0 +1,11 @@
+<div class="error-state">
+  <div>
+    <p class="display">404</p>
+    <h1 class="h2">{{ 'errors.not_found_title' | t }}</h1>
+    <p>{{ 'errors.not_found_text' | t }}</p>
+    <div class="empty-state__links">{%- for link in linklists[settings.main_menu].links -%}<a class="chip" href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}</div>
+  </div>
+</div>
+{% schema %}
+{ "name": "Page introuvable", "settings": [] }
+{% endschema %}

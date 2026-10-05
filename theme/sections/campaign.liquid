@@ -1,0 +1,70 @@
+{%- comment -%}
+  Campaign module (Soldes, Super Deals, seasonal…). The "jusqu’à −X %" ceiling is computed from the
+  products actually displayed, never typed by hand.
+{%- endcomment -%}
+{%- liquid
+  assign products = section.settings.products
+  if products == blank and section.settings.collection != blank
+    assign products = section.settings.collection.products
+  endif
+  assign max_off = 0
+  assign shown = 0
+  for p in products
+    if p.available
+      assign v = p.selected_or_first_available_variant
+      if v.compare_at_price > v.price
+        assign off = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price
+        if off > max_off
+          assign max_off = off
+        endif
+      endif
+      assign shown = shown | plus: 1
+      if shown == 3
+        break
+      endif
+    endif
+  endfor
+-%}
+<section class="section section--linen" aria-labelledby="camp-{{ section.id }}">
+  <div class="container campaign__grid">
+    <div class="campaign__panel reveal" style="background: {{ section.settings.panel_color }}; color: {{ section.settings.text_color }}">
+      <div>
+        <span class="label">{{ section.settings.eyebrow }}</span>
+        <h2 class="campaign__title" id="camp-{{ section.id }}">{{ section.settings.title }}</h2>
+        {%- if section.settings.show_upto and max_off >= 10 -%}<p class="campaign__upto"><span>{{ 'campaign.up_to' | t }}</span><strong>−{{ max_off }}&nbsp;%</strong></p>{%- endif -%}
+      </div>
+      <div>
+        {%- if section.settings.text != blank -%}<p class="campaign__text">{{ section.settings.text }}</p>{%- endif -%}
+        {%- if section.settings.cta_label != blank -%}<a class="btn" style="margin-top:1.75rem" href="{{ section.settings.cta_link | default: section.settings.collection.url }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a>{%- endif -%}
+      </div>
+    </div>
+    <div class="campaign__products" data-list="{{ section.settings.list_name | escape }}">
+      {%- assign shown = 0 -%}
+      {%- for p in products -%}
+        {%- if p.available -%}
+          {% render 'product-card', product: p, compact: true, sizes: '(min-width:1024px) 18vw, 60vw', list: section.settings.list_name %}
+          {%- assign shown = shown | plus: 1 -%}{%- if shown == 3 -%}{%- break -%}{%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Campagne promotionnelle",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Offres du moment" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Les<br>Soldes" },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Méridiennes, lits et fauteuils à prix doux, dans la limite des stocks disponibles." },
+    { "type": "checkbox", "id": "show_upto", "label": "Afficher « jusqu’à −X % » (calculé)", "default": true },
+    { "type": "color", "id": "panel_color", "label": "Couleur du panneau", "default": "#F0BA16" },
+    { "type": "color", "id": "text_color", "label": "Couleur du texte", "default": "#24201D" },
+    { "type": "product_list", "id": "products", "label": "Produits mis en avant (3)", "limit": 3 },
+    { "type": "collection", "id": "collection", "label": "…ou collection" },
+    { "type": "text", "id": "cta_label", "label": "Bouton", "default": "Voir toutes les offres" },
+    { "type": "url", "id": "cta_link", "label": "Lien du bouton" },
+    { "type": "text", "id": "list_name", "label": "Nom de liste (analytics)", "default": "campaign" }
+  ],
+  "presets": [{ "name": "Campagne promotionnelle" }]
+}
+{% endschema %}

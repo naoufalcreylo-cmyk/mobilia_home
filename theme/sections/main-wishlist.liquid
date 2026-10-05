@@ -1,0 +1,22 @@
+{%- comment -%} Favoris page (template page.wishlist). Stored per device in localStorage — no account required. {%- endcomment -%}
+<header class="plp-head plp-head--noimg"><div class="container">
+  <ol class="crumbs" role="list" aria-label="{{ 'accessibility.breadcrumb' | t }}"><li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li><li><span aria-current="page">{{ page.title }}</span></li></ol>
+  <div class="plp-head__grid"><div class="plp-head__copy">
+    <p class="label" style="color:var(--taupe);margin-bottom:1rem">{{ section.settings.eyebrow }}</p>
+    <h1 class="h1 plp-head__title">{{ page.title }}<sup data-wish-count></sup></h1>
+    {%- if page.content != blank -%}<div class="plp-head__desc body-l">{{ page.content }}</div>{%- endif -%}
+  </div></div>
+</div></header>
+<div class="container section--tight" style="padding-top:2rem">
+  <div class="product-grid" data-wishlist-grid data-list="wishlist"></div>
+  <div class="empty-state" data-wishlist-empty hidden>
+    <div class="empty-state__mark">{% render 'icon', name: 'heart' %}</div>
+    <p class="h3">{{ 'wishlist.empty_title' | t }}</p><p>{{ 'wishlist.empty_text' | t }}</p>
+    <div class="empty-state__links">{%- for link in linklists[settings.main_menu].links limit: 4 -%}<a class="chip" href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}</div>
+  </div>
+  {%- capture wish_msg -%}{{ 'wishlist.share_message' | t }}{%- endcapture -%}
+  <p style="margin-top:2.5rem;text-align:center" data-wishlist-share hidden><a class="btn btn--wa" href="#" target="_blank" rel="noopener" data-wa-context="wishlist_share" data-intro="{{ wish_msg | escape }}">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ 'wishlist.share' | t }}</a></p>
+</div>
+{% schema %}
+{ "name": "Favoris", "settings": [{ "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Votre sélection" }] }
+{% endschema %}

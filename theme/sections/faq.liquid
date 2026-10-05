@@ -1,0 +1,50 @@
+{%- comment -%} FAQ with FAQPage structured data. Only publish answers that Mobilia has validated. {%- endcomment -%}
+<section class="section{% if section.settings.flush_top %} section--flush-top{% endif %}" id="faq" aria-labelledby="faq-{{ section.id }}">
+  <div class="container faq__grid">
+    <div class="faq__head">
+      <span class="label">{{ section.settings.eyebrow }}</span>
+      <h2 class="h2" id="faq-{{ section.id }}">{{ section.settings.title }}</h2>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+      <a class="btn btn--wa" href="{% render 'whatsapp-url', message: section.settings.whatsapp_message %}" target="_blank" rel="noopener" data-wa-context="faq">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ section.settings.cta_label }}</a>
+    </div>
+    <div class="faq__list">
+      <div class="acc acc--lg">
+        {%- for block in section.blocks -%}
+          {%- assign open = false -%}{%- if forloop.first and section.settings.open_first -%}{%- assign open = true -%}{%- endif -%}
+          <div class="acc__item{% if open %} is-open{% endif %}" {{ block.shopify_attributes }}>
+            <h3 style="margin:0"><button class="acc__btn" type="button" aria-expanded="{{ open }}" aria-controls="faq-{{ block.id }}" id="faq-{{ block.id }}-b">{{ block.settings.question }}<span class="plus" aria-hidden="true"></span></button></h3>
+            <div class="acc__panel" id="faq-{{ block.id }}" role="region" aria-labelledby="faq-{{ block.id }}-b"{% unless open %} inert{% endunless %}><div><div class="acc__content prose">{{ block.settings.answer }}</div></div></div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+  {%- for block in section.blocks -%}
+    { "@type": "Question", "name": {{ block.settings.question | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | json }} } }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+] }
+</script>
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Questions fréquentes" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Tout savoir avant de <em>commander</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Livraison, montage, paiement, sur-mesure : les réponses de notre service client." },
+    { "type": "text", "id": "cta_label", "label": "Bouton", "default": "Poser une autre question" },
+    { "type": "textarea", "id": "whatsapp_message", "label": "Message WhatsApp", "default": "Bonjour Mobilia, j’ai une question." },
+    { "type": "checkbox", "id": "open_first", "label": "Ouvrir la première question", "default": true },
+    { "type": "checkbox", "id": "flush_top", "label": "Réduire l’espace supérieur", "default": true }
+  ],
+  "blocks": [
+    { "type": "question", "name": "Question", "settings": [
+      { "type": "text", "id": "question", "label": "Question" },
+      { "type": "richtext", "id": "answer", "label": "Réponse (informations vérifiées uniquement)" }
+    ] }
+  ],
+  "presets": [{ "name": "FAQ" }]
+}
+{% endschema %}

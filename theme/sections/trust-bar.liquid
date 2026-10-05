@@ -1,0 +1,27 @@
+<section class="trust" aria-label="{{ section.settings.aria_label | escape }}">
+  <div class="container">
+    <ul class="trust__list" role="list">
+      {%- for block in section.blocks -%}
+        <li class="trust__item" {{ block.shopify_attributes }}><span class="trust__k">{{ block.settings.key }}</span><span class="trust__v">{{ block.settings.value }}</span></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Réassurance",
+  "settings": [{ "type": "text", "id": "aria_label", "label": "Nom accessible", "default": "Nos engagements" }],
+  "blocks": [
+    { "type": "item", "name": "Engagement", "limit": 4, "settings": [
+      { "type": "inline_richtext", "id": "key", "label": "Mot-clé (serif)", "default": "30 <em>ans</em>" },
+      { "type": "text", "id": "value", "label": "Précision", "default": "d’expertise dans l’ameublement" }
+    ] }
+  ],
+  "presets": [{ "name": "Réassurance", "blocks": [
+    { "type": "item", "settings": { "key": "30 <em>ans</em>", "value": "d’expertise dans l’ameublement" } },
+    { "type": "item", "settings": { "key": "48<em>h</em>", "value": "Livraison express, partout au Maroc" } },
+    { "type": "item", "settings": { "key": "Montage", "value": "offert, par nos menuisiers" } },
+    { "type": "item", "settings": { "key": "Conseil <em>déco</em>", "value": "gratuit avec Home Décor" } }
+  ] }]
+}
+{% endschema %}

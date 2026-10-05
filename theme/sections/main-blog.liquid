@@ -1,0 +1,24 @@
+{%- paginate blog.articles by 12 -%}
+<section class="section--tight">
+  <div class="container">
+    <ol class="crumbs" role="list" aria-label="{{ 'accessibility.breadcrumb' | t }}"><li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li><li><span aria-current="page">{{ blog.title }}</span></li></ol>
+    <div class="section-head" style="margin-top:1.5rem"><div><span class="label">{{ section.settings.eyebrow }}</span><h1 class="h1">{{ blog.title }}</h1></div></div>
+    <div class="journal__grid">
+      {%- for article in blog.articles -%}
+        <article class="post{% if forloop.first and paginate.current_page == 1 %} post--lead{% endif %}">
+          <div class="media">{% render 'image', image: article.image, sizes: '(min-width:1024px) 40vw, 100vw', max: 1200, alt: '' %}</div>
+          <div>
+            <p class="label post__meta"><time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | time_tag: format: 'date' | strip_html }}</time></p>
+            <h2 class="post__title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+            <p>{{ article.excerpt_or_content | strip_html | truncatewords: 28 }}</p>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+    {%- if paginate.pages > 1 -%}<nav class="plp-more" aria-label="{{ 'general.pagination' | t }}">{{ paginate | default_pagination }}</nav>{%- endif -%}
+  </div>
+</section>
+{%- endpaginate -%}
+{% schema %}
+{ "name": "Blog", "settings": [{ "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Inspirations & conseils" }] }
+{% endschema %}

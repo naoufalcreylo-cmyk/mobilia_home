@@ -1,0 +1,105 @@
+{%- comment -%}
+  Dual use:
+  1. Rendered once in layout/theme.liquid → overlay shell + "popular searches" default state.
+  2. Fetched by assets/search.js from /search/suggest?q=…&section_id=predictive-search
+     → only [data-ps-results] is swapped in (predictive_search.performed == true).
+{%- endcomment -%}
+{%- capture results -%}
+  {%- if predictive_search.performed -%}
+    {%- assign products = predictive_search.resources.products -%}
+    {%- assign collections = predictive_search.resources.collections -%}
+    {%- assign queries = predictive_search.resources.queries -%}
+    {%- if products.size == 0 and collections.size == 0 and queries.size == 0 -%}
+      <div class="search__results"><div class="search__empty" style="grid-column:1/-1">
+        <p class="h3">{{ 'search.no_results' | t: terms: predictive_search.terms | escape }}</p>
+        <p class="muted" style="margin:.75rem 0 1.5rem">{{ 'search.no_results_hint' | t }}</p>
+        <div class="empty-state__links" style="justify-content:flex-start">
+          {%- for c in section.settings.popular_collections limit: 4 -%}<a class="chip" href="{{ c.url }}">{{ c.title }}</a>{%- endfor -%}
+        </div>
+        {%- assign msg = 'search.whatsapp_message' | t: terms: predictive_search.terms -%}
+        <a class="btn btn--wa" style="margin-top:1.5rem" href="{% render 'whatsapp-url', message: msg %}" target="_blank" rel="noopener" data-wa-context="search_empty">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ 'search.ask_advisor' | t }}</a>
+      </div></div>
+    {%- else -%}
+      <div class="search__results">
+        <div class="search__col">
+          {%- if collections.size > 0 -%}
+            <h3 class="label">{{ 'search.categories' | t }}</h3>
+            <ul class="search__terms" role="list">
+              {%- for c in collections limit: 6 -%}<li><a href="{{ c.url }}"><span class="search__term">{{ c.title }}</span><span>{{ c.all_products_count }}</span></a></li>{%- endfor -%}
+            </ul>
+          {%- endif -%}
+          {%- if queries.size > 0 -%}
+            <h3 class="label" style="margin-top:1.5rem">{{ 'search.suggestions' | t }}</h3>
+            <ul class="search__terms" role="list">
+              {%- for q in queries limit: 4 -%}<li><a href="{{ q.url }}"><span class="search__term">{{ q.styled_text }}</span></a></li>{%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+        <div class="search__col">
+          <h3 class="label">{{ 'search.products' | t }}</h3>
+          <div class="search__products">
+            {%- for p in products limit: 8 -%}
+              <a class="search__product" href="{{ p.url }}" data-handle="{{ p.handle }}">
+                <div class="media">{% render 'image', image: p.featured_media.preview_image, sizes: '(min-width:1024px) 15vw, 45vw', max: 720, alt: '' %}</div>
+                <p><span class="label muted" style="display:block;margin-bottom:.2rem">{{ p.metafields.mobilia.category.value | default: p.type }}</span>{{ p.title | split: ' – ' | first }}<br><span class="price">{{ p.price | money }}</span></p>
+              </a>
+            {%- endfor -%}
+          </div>
+          <a class="btn btn--ghost search__all" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product">{{ 'search.view_all' | t }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a>
+        </div>
+      </div>
+    {%- endif -%}
+  {%- else -%}
+    <div class="search__results">
+      <div class="search__col">
+        <h3 class="label">{{ 'search.popular' | t }}</h3>
+        <ul class="search__terms" role="list">
+          {%- for c in section.settings.popular_collections -%}<li><a href="{{ c.url }}"><span class="search__term">{{ c.title }}</span><span>{{ c.all_products_count }}</span></a></li>{%- endfor -%}
+        </ul>
+      </div>
+      <div class="search__col">
+        <h3 class="label">{{ section.settings.featured_heading }}</h3>
+        <div class="search__products">
+          {%- for p in section.settings.featured_products limit: 4 -%}
+            <a class="search__product" href="{{ p.url }}" data-handle="{{ p.handle }}">
+              <div class="media">{% render 'image', image: p.featured_media.preview_image, sizes: '(min-width:1024px) 15vw, 45vw', max: 720, alt: '' %}</div>
+              <p>{{ p.title | split: ' – ' | first }}<br><span class="price">{{ p.price | money }}</span></p>
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if predictive_search.performed -%}
+  <div data-ps-results>{{ results }}</div>
+{%- else -%}
+  <div class="search" id="search" aria-hidden="true" data-search>
+    <div class="search__overlay" data-close></div>
+    <div class="search__panel" role="dialog" aria-modal="true" aria-label="{{ 'search.title' | t }}">
+      <form class="container" action="{{ routes.search_url }}" method="get" role="search" data-search-form>
+        <input type="hidden" name="type" value="product">
+        <div class="search__bar">{% render 'icon', name: 'search' %}
+          <label class="visually-hidden" for="q">{{ 'search.label' | t }}</label>
+          <input class="search__input" id="q" name="q" type="search" placeholder="{{ section.settings.placeholder | escape }}" autocomplete="off" aria-controls="search-results" aria-describedby="search-status">
+          <button class="icon-btn" type="button" data-close aria-label="{{ 'search.close' | t }}">{% render 'icon', name: 'close' %}</button>
+        </div>
+        <p class="visually-hidden" id="search-status" aria-live="polite"></p>
+        <div id="search-results"><div data-ps-results>{{ results }}</div></div>
+      </form>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Recherche prédictive",
+  "settings": [
+    { "type": "text", "id": "placeholder", "label": "Texte d’exemple", "default": "Salon, table, lit, Mona…" },
+    { "type": "collection_list", "id": "popular_collections", "label": "Recherches populaires (collections)", "limit": 8 },
+    { "type": "text", "id": "featured_heading", "label": "Titre des produits suggérés", "default": "Nos salons du moment" },
+    { "type": "product_list", "id": "featured_products", "label": "Produits suggérés (avant saisie)", "limit": 4 }
+  ]
+}
+{% endschema %}

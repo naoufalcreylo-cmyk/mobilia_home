@@ -1,0 +1,12 @@
+{%- assign v = product.selected_or_first_available_variant -%}
+<li class="look__row{% if main %} is-hl{% endif %}" data-handle="{{ product.handle }}">
+  <div class="media">{% render 'image', image: product.featured_media.preview_image, sizes: '76px', max: 240, alt: '' %}</div>
+  <div>
+    <span class="look__tag">{% if main %}{{ 'looks.in_scene' | t }}{% else %}{{ 'looks.pair' | t }}{% endif %} · {{ product.metafields.mobilia.category.value | default: product.type }}</span>
+    <a href="{{ product.url }}"><strong>{{ product.metafields.mobilia.display_name.value | default: product.title | split: ' – ' | first }}</strong></a>
+    <span class="price">{{ v.price | money }}</span>
+  </div>
+  {%- if v.available -%}
+    <button class="icon-btn" type="button" data-add-variant="{{ v.id }}" data-list="shop_the_look" aria-label="{{ 'cart.add_item' | t: name: product.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+  {%- endif -%}
+</li>

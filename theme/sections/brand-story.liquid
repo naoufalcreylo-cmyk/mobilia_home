@@ -1,0 +1,48 @@
+<section class="section section--linen" aria-labelledby="story-{{ section.id }}">
+  <div class="container story__grid">
+    <div class="story__media reveal">
+      <div class="media">{%- assign img1 = section.settings.image | default: section.settings.image_product.featured_media.preview_image -%}{% render 'image', image: img1, sizes: '(min-width:1024px) 55vw, 82vw', max: 1600 %}</div>
+      {%- assign img2 = section.settings.image_2 | default: section.settings.image_2_product.featured_media.preview_image -%}{%- if img2 != blank -%}<div class="media">{% render 'image', image: img2, sizes: '(min-width:1024px) 20vw, 32vw', max: 720 %}</div>{%- endif -%}
+    </div>
+    <div class="story__copy reveal">
+      <span class="label">{{ section.settings.eyebrow }}</span>
+      <h2 class="h2" id="story-{{ section.id }}">{{ section.settings.title }}</h2>
+      <div class="body-l">{{ section.settings.text }}</div>
+      {%- if section.blocks.size > 0 -%}
+        <ol class="story__pillars" role="list">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}><b>0{{ forloop.index }}</b><div><strong>{{ block.settings.title }}</strong><span>{{ block.settings.text }}</span></div></li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}<a class="link-arrow" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }} {% render 'icon', name: 'arrow' %}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Récit de marque",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image principale" },
+    { "type": "image_picker", "id": "image_2", "label": "Image secondaire (superposée)" },
+    { "type": "product", "id": "image_product", "label": "…ou photo principale d’un produit" },
+    { "type": "product", "id": "image_2_product", "label": "…ou photo secondaire d’un produit" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Mobilia Home depuis 30 ans" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Des meubles pensés pour être <em>vécus</em>." },
+    { "type": "richtext", "id": "text", "label": "Texte", "default": "<p>Depuis trois décennies, Mobilia accompagne les familles marocaines dans l’aménagement de leur intérieur. Nous sélectionnons des pièces au design actuel, au prix d’usine, et nous les livrons et les montons chez vous.</p>" },
+    { "type": "text", "id": "cta_label", "label": "Lien", "default": "Nos services" },
+    { "type": "url", "id": "cta_link", "label": "URL" }
+  ],
+  "blocks": [
+    { "type": "pillar", "name": "Pilier", "limit": 4, "settings": [
+      { "type": "text", "id": "title", "label": "Titre", "default": "Prix d’usine" },
+      { "type": "textarea", "id": "text", "label": "Texte", "default": "Le design contemporain, sans intermédiaire superflu." }
+    ] }
+  ],
+  "presets": [{ "name": "Récit de marque", "blocks": [
+    { "type": "pillar", "settings": { "title": "Prix d’usine", "text": "Le design contemporain, sans intermédiaire superflu." } },
+    { "type": "pillar", "settings": { "title": "Sur mesure", "text": "Salons d’angle personnalisables : dimensions, angle, coloris, tissus anti-taches." } },
+    { "type": "pillar", "settings": { "title": "Home Décor", "text": "Nos experts en décoration vous conseillent, pour tous les budgets." } }
+  ] }]
+}
+{% endschema %}

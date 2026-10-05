@@ -1,0 +1,21 @@
+{
+  "current": {
+    "main_menu": "main-menu",
+    "whatsapp_number": "212661054742",
+    "whatsapp_display": "+212 661 05 47 42",
+    "help_message": "Bonjour Mobilia, j’ai besoin d’aide.",
+    "show_help_button": true,
+    "phone_display": "06 61 05 47 64",
+    "phone_e164": "+212661054764",
+    "contact_email": "triangledormobilia@gmail.com",
+    "free_shipping_threshold": 2500,
+    "free_shipping_note": "Livraison gratuite dans un rayon de 25 km dès 2 500 DH d’achat.",
+    "social_instagram": "https://www.instagram.com/mobiliatriangle_dor/",
+    "social_facebook": "https://www.facebook.com/Mobiliabourgogne",
+    "social_tiktok": "https://www.tiktok.com/@mobiliatriangle_dor",
+    "social_youtube": "https://www.youtube.com/channel/UCVRKTyjpdkwnUSfAIojNKIg"
+  },
+  "presets": {
+    "Mobilia": {}
+  }
+}

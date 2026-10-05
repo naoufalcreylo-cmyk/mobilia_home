@@ -1,0 +1,47 @@
+{%- comment -%}
+  Storefront filtering UI (Search & Discovery). Params: results (collection or search object)
+  Renders the <aside class="filters"> (sidebar on desktop, full-screen drawer below 1024px) and the
+  active-filter chips. assets/facets.js submits changes via the Section Rendering API.
+{%- endcomment -%}
+<aside class="filters" id="filters" aria-label="{{ 'facets.title' | t }}" data-filters>
+  <div class="filters__head"><h2 class="drawer__title">{{ 'facets.title' | t }}</h2><button class="icon-btn" type="button" data-filters-close aria-label="{{ 'facets.close' | t }}">{% render 'icon', name: 'close' %}</button></div>
+  <form class="filters__body" data-facets-form>
+    {%- if results.terms -%}<input type="hidden" name="q" value="{{ results.terms | escape }}"><input type="hidden" name="type" value="product">{%- endif -%}
+    <input type="hidden" name="sort_by" value="{{ results.sort_by | default: results.default_sort_by | escape }}">
+    {%- for filter in results.filters -%}
+      {%- case filter.type -%}
+        {%- when 'list', 'boolean' -%}
+          {%- if filter.values.size < 2 and filter.active_values.size == 0 -%}{%- continue -%}{%- endif -%}
+          <details class="fgroup" open>
+            <summary class="acc__btn">{{ filter.label }}<span class="plus" aria-hidden="true"></span></summary>
+            <div class="fgroup__body">
+              {%- for value in filter.values limit: 20 -%}
+                <label class="fopt{% if value.count == 0 and value.active == false %} is-empty{% endif %}">
+                  <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+                  <span>{{ value.label }}</span><small>{{ value.count }}</small>
+                </label>
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- when 'price_range' -%}
+          <details class="fgroup" open>
+            <summary class="acc__btn">{{ filter.label }}<span class="plus" aria-hidden="true"></span></summary>
+            <div class="fgroup__body">
+              <div class="frange">
+                <label class="visually-hidden" for="pmin">{{ 'facets.from' | t }}</label>
+                <input class="input" id="pmin" type="number" inputmode="numeric" name="{{ filter.min_value.param_name }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"{% if filter.min_value.value %} value="{{ filter.min_value.value | money_without_currency | remove: ',' | remove: ' ' }}"{% endif %}>
+                <span>–</span>
+                <label class="visually-hidden" for="pmax">{{ 'facets.to' | t }}</label>
+                <input class="input" id="pmax" type="number" inputmode="numeric" name="{{ filter.max_value.param_name }}" placeholder="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}" min="0"{% if filter.max_value.value %} value="{{ filter.max_value.value | money_without_currency | remove: ',' | remove: ' ' }}"{% endif %}>
+              </div>
+              <small class="muted">{{ 'facets.price_hint' | t }}</small>
+            </div>
+          </details>
+      {%- endcase -%}
+    {%- endfor -%}
+  </form>
+  <div class="filters__foot">
+    <a class="btn btn--ghost" href="{{ results.url | default: routes.search_url }}{% if results.terms %}?q={{ results.terms | url_encode }}&type=product{% endif %}" data-facet-link>{{ 'facets.clear' | t }}</a>
+    <button class="btn" type="button" data-filters-close>{{ 'facets.show_results' | t: count: results.products_count | default: results.results_count }}</button>
+  </div>
+</aside>

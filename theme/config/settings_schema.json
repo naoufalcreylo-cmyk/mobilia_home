@@ -1,0 +1,47 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Mobilia Maison",
+    "theme_version": "1.0.0",
+    "theme_author": "Mobilia Home",
+    "theme_documentation_url": "https://mobilia.ma",
+    "theme_support_url": "https://mobilia.ma/pages/contact"
+  },
+  {
+    "name": "Marque",
+    "settings": [
+      { "type": "image_picker", "id": "logo", "label": "Logo", "info": "PNG transparent, au moins 400 px de large. Par défaut : logo Mobilia Home du thème." },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "96 × 96 px" },
+      { "type": "link_list", "id": "main_menu", "label": "Menu principal (fil d’Ariane, états vides)", "default": "main-menu" },
+      { "type": "page", "id": "wishlist_page", "label": "Page « Favoris »", "info": "Créez une page avec le modèle page.wishlist." }
+    ]
+  },
+  {
+    "name": "Contact & WhatsApp",
+    "settings": [
+      { "type": "text", "id": "whatsapp_number", "label": "Numéro WhatsApp (format international, sans +)", "default": "212661054742" },
+      { "type": "text", "id": "whatsapp_display", "label": "Numéro WhatsApp affiché", "default": "+212 661 05 47 42" },
+      { "type": "textarea", "id": "help_message", "label": "Message WhatsApp « Besoin d’aide ? »", "default": "Bonjour Mobilia, j’ai besoin d’aide." },
+      { "type": "checkbox", "id": "show_help_button", "label": "Bouton flottant « Besoin d’aide ? » (hors fiche produit)", "default": true },
+      { "type": "text", "id": "phone_display", "label": "Téléphone service client (affiché)", "default": "06 61 05 47 64" },
+      { "type": "text", "id": "phone_e164", "label": "Téléphone service client (format +212…)", "default": "+212661054764" },
+      { "type": "text", "id": "contact_email", "label": "E-mail de contact", "default": "triangledormobilia@gmail.com" }
+    ]
+  },
+  {
+    "name": "Livraison",
+    "settings": [
+      { "type": "number", "id": "free_shipping_threshold", "label": "Seuil de livraison offerte (DH)", "default": 2500, "info": "0 pour masquer la jauge du panier." },
+      { "type": "text", "id": "free_shipping_note", "label": "Précision sous la jauge", "default": "Livraison gratuite dans un rayon de 25 km dès 2 500 DH d’achat." }
+    ]
+  },
+  {
+    "name": "Réseaux sociaux",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_facebook", "label": "Facebook" },
+      { "type": "url", "id": "social_tiktok", "label": "TikTok" },
+      { "type": "url", "id": "social_youtube", "label": "YouTube" }
+    ]
+  }
+]

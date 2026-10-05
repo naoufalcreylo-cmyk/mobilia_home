@@ -1,0 +1,176 @@
+{%- comment -%}
+  Header + mega menu + mobile drawer, all driven by one Shopify menu (Navigation > main-menu).
+  Menu shape supported:
+    Salon (top level)
+      ├─ Salons          ← 2nd level with children = a column heading
+      │    ├─ Salon d’angle (collection link → product count shown)
+      │    └─ …
+      └─ Assises …
+  If a 2nd-level item has no children it is listed directly in a single column.
+  "Mega visual" blocks attach editorial images to a top-level item (matched by its title).
+{%- endcomment -%}
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign logo_w = section.settings.logo_width
+-%}
+<header class="header" data-header>
+  <div class="container header__inner">
+    <button class="icon-btn header__menu" type="button" data-open="mnav" aria-label="{{ 'header.menu' | t }}" aria-controls="mnav">{% render 'icon', name: 'menu' %}</button>
+
+    <a class="header__logo" href="{{ routes.root_url }}" style="--logo-w: {{ logo_w }}px" aria-label="{{ shop.name }} — {{ 'general.home' | t }}">
+      {%- if settings.logo != blank -%}
+        {{ settings.logo | image_url: width: 400 | image_tag: alt: shop.name, widths: '200,300,400', sizes: '140px', loading: 'eager' }}
+      {%- else -%}
+        <img src="{{ 'logo-mobilia.png' | asset_url }}" alt="{{ shop.name }}" width="600" height="236">
+      {%- endif -%}
+    </a>
+
+    <nav class="header__nav" aria-label="{{ 'header.main_nav' | t }}">
+      <ul class="nav" role="list">
+        {%- for link in menu.links -%}
+          {%- if link.links.size > 0 -%}
+            {%- assign mid = 'mega-' | append: link.handle -%}
+            <li class="nav__item">
+              <button class="nav__link" type="button" aria-expanded="false" aria-controls="{{ mid }}">{{ link.title }}</button>
+              <div class="mega" id="{{ mid }}" role="region" aria-label="{{ link.title | escape }}">
+                <div class="container mega__inner">
+                  {%- assign has_groups = false -%}
+                  {%- for child in link.links -%}{%- if child.links.size > 0 -%}{%- assign has_groups = true -%}{%- endif -%}{%- endfor -%}
+                  <div class="mega__groups{% unless has_groups %} mega__groups--single{% endunless %}">
+                    {%- if has_groups -%}
+                      {%- for child in link.links -%}
+                        <div class="mega__group">
+                          <h3 class="label">{{ child.title }}</h3>
+                          <ul class="mega__list" role="list">
+                            {%- for grand in child.links -%}
+                              <li><a href="{{ grand.url }}">{{ grand.title }}{% if grand.type == 'collection_link' %}<span>{{ grand.object.all_products_count }}</span>{% endif %}</a></li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      {%- endfor -%}
+                    {%- else -%}
+                      <div class="mega__group">
+                        <h3 class="label">{{ link.title }}</h3>
+                        <ul class="mega__list" role="list">
+                          {%- for child in link.links -%}
+                            <li><a href="{{ child.url }}">{{ child.title }}{% if child.type == 'collection_link' %}<span>{{ child.object.all_products_count }}</span>{% endif %}</a></li>
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                    {%- endif -%}
+                    <div class="mega__all"><a class="link-arrow" href="{{ link.url }}">{{ 'header.see_all' | t: name: link.title }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a></div>
+                  </div>
+
+                  {%- assign col = 7 -%}
+                  {%- for block in section.blocks -%}
+                    {%- if block.type == 'mega_visual' and block.settings.menu_item == link.title -%}
+                      {%- assign img = block.settings.image | default: block.settings.collection.featured_image -%}
+                      {%- assign href = block.settings.link | default: block.settings.collection.url -%}
+                      <a class="mega__feature" href="{{ href }}" style="grid-column: {{ col }} / span 3" {{ block.shopify_attributes }}>
+                        <div class="media">{% render 'image', image: img, sizes: '22vw', max: 720, alt: '' %}</div>
+                        <span class="label muted">{{ block.settings.eyebrow }}</span>
+                        <span class="mega__feature-title">{{ block.settings.title | default: block.settings.collection.title }}</span>
+                      </a>
+                      {%- assign col = col | plus: 3 -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </div>
+            </li>
+          {%- else -%}
+            <li class="nav__item">
+              <a class="nav__link{% if link.title == section.settings.accent_item %} nav__link--outlet{% endif %}" href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header__utils">
+      {%- if section.settings.stores_link != blank -%}
+        <a class="header__text-link" href="{{ section.settings.stores_link }}">{% render 'icon', name: 'pin' %}{{ 'header.stores' | t }}</a>
+      {%- endif -%}
+      <button class="icon-btn" type="button" data-open="search" aria-label="{{ 'search.title' | t }}" aria-controls="search">{% render 'icon', name: 'search' %}</button>
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="icon-btn header__util--desktop" href="{{ routes.account_url }}" aria-label="{{ 'header.account' | t }}">{% render 'icon', name: 'user' %}</a>
+      {%- endif -%}
+      <a class="icon-btn header__util--desktop" href="{{ settings.wishlist_page.url | default: '/pages/favoris' }}" data-wishlist-link aria-label="{{ 'wishlist.title' | t }}">{% render 'icon', name: 'heart' %}<span class="count" data-wish-count></span></a>
+      <a class="icon-btn" href="{{ routes.cart_url }}" data-open="cart" aria-label="{{ 'cart.title' | t }}" aria-controls="cart">{% render 'icon', name: 'bag' %}<span class="count" data-cart-count data-count="{{ cart.item_count }}">{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}</span></a>
+    </div>
+  </div>
+</header>
+
+{%- comment -%} Mobile drawer: same menu, accordion per room {%- endcomment -%}
+<div class="drawer drawer--left" id="mnav" aria-hidden="true">
+  <div class="drawer__overlay" data-close></div>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'header.menu' | t }}">
+    <div class="drawer__head">
+      {%- if settings.logo != blank -%}{{ settings.logo | image_url: width: 240 | image_tag: alt: shop.name, style: 'width:110px;height:auto' }}{%- else -%}<img src="{{ 'logo-mobilia.png' | asset_url }}" alt="{{ shop.name }}" width="110" height="43" style="width:110px;height:auto">{%- endif -%}
+      <button class="icon-btn" type="button" data-close aria-label="{{ 'header.close_menu' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="drawer__body mnav__body">
+      <ul class="mnav__rooms" role="list">
+        {%- for link in menu.links -%}
+          {%- if link.links.size > 0 -%}
+            <li>
+              <button class="mnav__toggle" type="button" aria-expanded="false" aria-controls="mnav-{{ link.handle }}">{{ link.title }}{% render 'icon', name: 'plus' %}</button>
+              <div class="mnav__panel" id="mnav-{{ link.handle }}" hidden>
+                {%- for child in link.links -%}
+                  {%- if child.links.size > 0 -%}
+                    <h3 class="label">{{ child.title }}</h3>
+                    <ul role="list">{%- for grand in child.links -%}<li><a href="{{ grand.url }}">{{ grand.title }}{% if grand.type == 'collection_link' %}<span>{{ grand.object.all_products_count }}</span>{% endif %}</a></li>{%- endfor -%}</ul>
+                  {%- else -%}
+                    {%- if forloop.first -%}<ul role="list">{%- endif -%}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                    {%- if forloop.last -%}</ul>{%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                <p style="margin-top:1rem"><a class="link-arrow" href="{{ link.url }}">{{ 'header.see_all' | t: name: link.title }} {% render 'icon', name: 'arrow' %}</a></p>
+              </div>
+            </li>
+          {%- else -%}
+            <li><a class="mnav__link" href="{{ link.url }}">{{ link.title }}{% render 'icon', name: 'arrow', class: 'icon' %}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <div class="mnav__util">
+        {%- if section.settings.stores_link != blank -%}<a href="{{ section.settings.stores_link }}">{% render 'icon', name: 'pin' %}{{ 'header.stores' | t }}</a>{%- endif -%}
+        <a href="{% render 'whatsapp-url', message: section.settings.advice_message %}" target="_blank" rel="noopener" data-wa-context="menu">{% render 'icon', name: 'whatsapp' %}{{ 'header.advice_whatsapp' | t }}</a>
+        <a href="{{ settings.wishlist_page.url | default: '/pages/favoris' }}" data-wishlist-link>{% render 'icon', name: 'heart' %}{{ 'wishlist.title' | t }}</a>
+        {%- if shop.customer_accounts_enabled -%}<a href="{{ routes.account_url }}">{% render 'icon', name: 'user' %}{{ 'header.account' | t }}</a>{%- endif -%}
+        {%- if settings.phone_display != blank -%}<a href="tel:{{ settings.phone_e164 }}">{% render 'icon', name: 'phone' %}{{ settings.phone_display }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>.header__logo { width: {{ logo_w }}px; } @media (max-width: 1023px) { .header__logo { width: {{ logo_w | times: 0.85 | round }}px; } }</style>
+
+{% schema %}
+{
+  "name": "En-tête",
+  "class": "section-header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu principal", "default": "main-menu" },
+    { "type": "range", "id": "logo_width", "label": "Largeur du logo", "min": 90, "max": 200, "step": 2, "unit": "px", "default": 132 },
+    { "type": "text", "id": "accent_item", "label": "Élément de menu mis en avant (ex. Outlet)", "default": "Outlet" },
+    { "type": "url", "id": "stores_link", "label": "Lien « Magasins »" },
+    { "type": "textarea", "id": "advice_message", "label": "Message WhatsApp « Conseil déco »", "default": "Bonjour Mobilia, j’aimerais être conseillé(e) pour mon intérieur." }
+  ],
+  "blocks": [
+    {
+      "type": "mega_visual",
+      "name": "Visuel méga-menu",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "menu_item", "label": "Titre de l’élément de menu concerné", "info": "Doit correspondre exactement (ex. Salon)." },
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "image_picker", "id": "image", "label": "Image (sinon image de la collection)" },
+        { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Sur mesure" },
+        { "type": "text", "id": "title", "label": "Titre (sinon titre de la collection)" },
+        { "type": "url", "id": "link", "label": "Lien (sinon collection)" }
+      ]
+    }
+  ]
+}
+{% endschema %}

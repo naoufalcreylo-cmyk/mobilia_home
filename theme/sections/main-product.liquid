@@ -1,0 +1,244 @@
+{%- comment -%}
+  Product page (PDP). Gallery 7/12 + sticky purchase panel 5/12 built from reorderable blocks.
+  Every block hides itself when its data is missing (no fake specs, reviews or delivery promises).
+{%- endcomment -%}
+{%- liquid
+  assign mf = product.metafields.mobilia
+  assign v = product.selected_or_first_available_variant
+  assign name = mf.display_name.value | default: product.title
+  assign title_parts = product.title | replace: ' - ', ' – ' | split: ' – '
+  if mf.display_name == blank
+    assign name = title_parts.first
+  endif
+  assign tagline = mf.tagline.value
+  if tagline == blank and title_parts.size > 1
+    assign tagline = title_parts | slice: 1, 5 | join: ' – '
+  endif
+  assign category = mf.category.value | default: product.type
+  assign custom = mf.customizable.value
+  assign media_count = product.media.size
+-%}
+<div class="pdp container" data-product data-section-id="{{ section.id }}" data-handle="{{ product.handle }}" data-url="{{ product.url }}">
+  <div class="pdp__grid">
+    {%- comment -%} Gallery {%- endcomment -%}
+    <div class="pdp__gallery">
+      <div class="gallery{% if media_count < 2 %} gallery--single{% endif %}" data-gallery tabindex="0" aria-label="{{ 'products.gallery' | t: count: media_count }}">
+        {%- for m in product.media -%}
+          <figure class="gallery__item media" data-index="{{ forloop.index0 }}" data-media-id="{{ m.id }}" data-full="{{ m.preview_image | image_url: width: 2400 }}">
+            {%- case m.media_type -%}
+              {%- when 'video' -%}{{ m | video_tag: controls: true, muted: true, playsinline: true, preload: 'metadata', image_size: '1600x' }}
+              {%- when 'external_video' -%}{{ m | external_video_tag }}
+              {%- else -%}
+                {%- assign alt = m.alt | default: name -%}
+                {%- if forloop.first -%}{% render 'image', image: m.preview_image, sizes: '(min-width:1024px) 58vw, 100vw', eager: true, max: 2000, alt: alt %}{%- else -%}{% render 'image', image: m.preview_image, sizes: '(min-width:1024px) 29vw, 100vw', max: 1600, alt: alt %}{%- endif -%}
+                {%- if forloop.first -%}<button class="gallery__zoom" type="button" data-zoom="0" aria-label="{{ 'products.zoom' | t }}">{% render 'icon', name: 'zoom' %}</button>{%- endif -%}
+            {%- endcase -%}
+          </figure>
+        {%- endfor -%}
+      </div>
+      {%- if media_count > 1 -%}<div class="gallery__dots" aria-hidden="true">{%- for m in product.media -%}<span{% if forloop.first %} class="is-active"{% endif %}></span>{%- endfor -%}</div>{%- endif -%}
+    </div>
+
+    {%- comment -%} Purchase panel {%- endcomment -%}
+    <div class="pdp__info">
+      <div class="pdp__sticky">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+
+            {%- when 'title' -%}
+              <div {{ block.shopify_attributes }}>
+                <div class="pdp__crumbs">{% render 'breadcrumbs', product: product %}
+                  <div class="card__badges" style="position:static">{%- if custom -%}<span class="badge">{{ 'products.custom' | t }}</span>{%- elsif product.tags contains 'nouveau' -%}<span class="badge badge--dot">{{ 'products.new' | t }}</span>{%- endif -%}</div>
+                </div>
+                {%- if category != blank -%}<p class="label pdp__cat" style="margin-top:1.5rem">{{ category }}</p>{%- endif -%}
+                <h1 class="h1 pdp__title">{{ name }}</h1>
+                {%- if tagline != blank -%}<p class="pdp__tl">{{ tagline }}</p>{%- endif -%}
+                {%- if mf.dimensions != blank -%}<p class="pdp__dims">{% render 'icon', name: 'dims' %}<span><span class="visually-hidden">{{ 'products.dimensions' | t }} : </span>{{ mf.dimensions.value }}</span></p>{%- endif -%}
+              </div>
+
+            {%- when 'price' -%}
+              <div data-price {{ block.shopify_attributes }}>
+                <div class="pdp__price">{% render 'price', product: product, variant: v, show_off: false %}</div>
+                {%- if v.compare_at_price > v.price -%}
+                  {%- assign save = v.compare_at_price | minus: v.price | money -%}
+                  {%- assign off = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price -%}
+                  <p class="pdp__save"><span>{{ 'products.you_save_html' | t: amount: save }}</span><span class="badge badge--sale">−{{ off }}&nbsp;%</span></p>
+                {%- endif -%}
+                {%- if block.settings.credit_text != blank -%}
+                  {%- capture credit_msg -%}{{ 'products.credit_message' | t: title: product.title }} {{ shop.url }}{{ product.url }}{%- endcapture -%}
+                  <p class="pdp__credit">{{ block.settings.credit_text }} · <a href="{% render 'whatsapp-url', message: credit_msg %}" target="_blank" rel="noopener" data-wa-context="credit">{{ 'products.credit_link' | t }}</a></p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'stock' -%}
+              <p class="pdp__stock" data-stock {{ block.shopify_attributes }}>
+                {%- if v.available -%}<span class="dot"></span>{{ block.settings.in_stock }}{%- else -%}<span class="dot dot--off"></span>{{ block.settings.out_of_stock }}{%- endif -%}
+              </p>
+
+            {%- when 'custom' -%}
+              {%- if custom -%}
+                {%- capture quote_msg -%}{{ 'products.quote_message' | t: title: product.title }} {{ shop.url }}{{ product.url }}{%- endcapture -%}
+                <div class="pdp__custom" {{ block.shopify_attributes }}>{% render 'icon', name: 'ruler' %}<div><strong>{{ block.settings.title }}</strong>{{ block.settings.text }}
+                  <a href="{% render 'whatsapp-url', message: quote_msg %}" target="_blank" rel="noopener" data-wa-context="custom_quote">{{ block.settings.link_label }}</a></div></div>
+              {%- endif -%}
+
+            {%- when 'buy_buttons' -%}
+              {%- form 'product', product, class: 'pdp__buy', data-buy: '', data-product-form: '', novalidate: 'novalidate' -%}
+                <input type="hidden" name="id" value="{{ v.id }}" data-variant-input>
+                {%- unless product.has_only_default_variant -%}
+                  <div class="variant-picker" style="grid-column:1/-1;display:grid;gap:1rem" data-variant-picker>
+                    {%- for option in product.options_with_values -%}
+                      <fieldset style="border:0;padding:0;margin:0">
+                        <legend class="label" style="margin-bottom:.6rem">{{ option.name }} : <span class="muted" data-option-value>{{ option.selected_value }}</span></legend>
+                        <div class="tabs">{%- for value in option.values -%}<label class="chip"><input class="visually-hidden" type="radio" name="option{{ option.position }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}>{{ value }}</label>{%- endfor -%}</div>
+                      </fieldset>
+                    {%- endfor -%}
+                    <script type="application/json" data-variants>{{ product.variants | json }}</script>
+                  </div>
+                {%- endunless -%}
+                <div class="qty"><button type="button" data-step="-1" aria-label="{{ 'products.decrease' | t }}">{% render 'icon', name: 'minus', class: 'icon' %}</button><input type="number" name="quantity" id="qty-{{ section.id }}" min="1" max="99" value="1" aria-label="{{ 'products.quantity' | t }}"><button type="button" data-step="1" aria-label="{{ 'products.increase' | t }}">{% render 'icon', name: 'plus', class: 'icon' %}</button></div>
+                <button class="btn btn--block" type="submit" name="add" data-add-main{% unless v.available %} disabled{% endunless %}>{% if v.available %}{{ 'products.add_to_cart' | t }}{% else %}{{ 'products.sold_out' | t }}{% endif %}</button>
+                <a class="btn btn--wa" href="{% render 'whatsapp-url', product: product, variant: v %}" target="_blank" rel="noopener" data-wa-product data-wa-context="product">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{% if v.available %}{{ 'products.order_whatsapp' | t }}{% else %}{{ 'products.notify_whatsapp' | t }}{% endif %}</a>
+                <p class="pdp__form-error" role="alert" data-form-error hidden style="grid-column:1/-1;color:var(--sale);font-size:.875rem"></p>
+              {%- endform -%}
+              <button class="pdp__wish" type="button" data-wish="{{ product.handle }}" aria-pressed="false">{% render 'icon', name: 'heart' %}{{ 'wishlist.add_short' | t }}</button>
+
+            {%- when 'perks' -%}
+              <ul class="pdp__perks" role="list" {{ block.shopify_attributes }}>
+                {%- liquid
+                  if custom and block.settings.delivery_custom != blank
+                    assign delivery_title = block.settings.delivery_custom_title
+                    assign delivery_text = block.settings.delivery_custom
+                  else
+                    assign delivery_title = block.settings.delivery_title
+                    assign delivery_text = block.settings.delivery_text
+                  endif
+                -%}
+                {%- if delivery_title != blank -%}<li>{% render 'icon', name: 'truck' %}<div><strong>{{ delivery_title }}</strong><span>{{ delivery_text }}</span></div></li>{%- endif -%}
+                {%- if block.settings.assembly_title != blank -%}<li>{% render 'icon', name: 'tool' %}<div><strong>{{ block.settings.assembly_title }}</strong><span>{{ block.settings.assembly_text }}</span></div></li>{%- endif -%}
+                {%- if block.settings.payment_title != blank -%}<li>{% render 'icon', name: 'shield' %}<div><strong>{{ block.settings.payment_title }}</strong><span>{{ block.settings.payment_text }}</span></div></li>{%- endif -%}
+                {%- if block.settings.store_title != blank -%}<li>{% render 'icon', name: 'store' %}<div><strong>{{ block.settings.store_title }}</strong><span><a href="{{ block.settings.store_link }}">{{ block.settings.store_text }}</a></span></div></li>{%- endif -%}
+              </ul>
+
+            {%- when 'details' -%}
+              <div class="pdp__details acc" {{ block.shopify_attributes }}>
+                {%- comment -%} 1. Sections from the existing description (Mobilia uses <h3> headings) {%- endcomment -%}
+                {%- liquid
+                  assign parts = product.description | split: '<h3'
+                  assign idx = 0
+                  assign intro = parts.first | strip_html | strip
+                -%}
+                {%- if intro != blank -%}
+                  {%- assign idx = idx | plus: 1 -%}
+                  {% render 'accordion-item', prefix: section.id, id: 'd0', title: block.settings.description_label, content: parts.first, open: true %}
+                {%- endif -%}
+                {%- for part in parts offset: 1 -%}
+                  {%- liquid
+                    assign head_html = part | split: '</h3>' | first
+                    assign head = head_html | split: '>' | slice: 1, 20 | join: '>' | strip_html | remove: '📐' | remove: '🚚' | remove: '💳' | remove: '✨' | remove: '🛋️' | remove: '🛏️' | remove: '⭐' | strip
+                    assign body = part | split: '</h3>' | slice: 1, 50 | join: '</h3>'
+                    assign is_open = false
+                    if idx == 0
+                      assign is_open = true
+                    endif
+                    assign idx = idx | plus: 1
+                  -%}
+                  {%- if body != blank -%}{% render 'accordion-item', prefix: section.id, id: forloop.index, title: head, content: body, open: is_open %}{%- endif -%}
+                {%- endfor -%}
+
+                {%- comment -%} 2. Structured metafields — shown only when filled {%- endcomment -%}
+                {%- liquid
+                  assign mf_keys = 'dimensions_detail,materials,care,warranty' | split: ','
+                  assign mf_labels = 'products.dimensions,products.materials,products.care,products.warranty' | split: ','
+                  for key in mf_keys
+                    assign field = mf[key]
+                    if field != blank
+                      assign t_key = mf_labels[forloop.index0]
+                      assign acc_title = t_key | t
+                      assign acc_body = field | metafield_tag
+                      assign acc_id = 'm' | append: forloop.index
+                      render 'accordion-item', prefix: section.id, id: acc_id, title: acc_title, content: acc_body
+                    endif
+                  endfor
+                -%}
+                {%- unless product.description contains 'Livraison' -%}
+                  {%- if block.settings.delivery_html != blank -%}{% render 'accordion-item', prefix: section.id, id: 'm5', title: block.settings.delivery_label, content: block.settings.delivery_html %}{%- endif -%}
+                {%- endunless -%}
+                {%- if block.settings.service_html != blank -%}{% render 'accordion-item', prefix: section.id, id: 'm6', title: block.settings.service_label, content: block.settings.service_html %}{%- endif -%}
+              </div>
+
+            {%- when 'text' -%}
+              <div class="prose small" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Mobile sticky purchase bar {%- endcomment -%}
+<div class="buybar" data-buybar aria-hidden="true">
+  <div class="buybar__info"><p>{{ name }}</p><span class="price" data-buybar-price>{{ v.price | money }}</span></div>
+  <a class="icon-btn" href="{% render 'whatsapp-url', product: product, variant: v %}" target="_blank" rel="noopener" aria-label="{{ 'products.order_whatsapp' | t }}" data-wa-product data-wa-context="buybar" tabindex="-1">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}</a>
+  {%- if v.available -%}<button class="btn" type="button" data-buybar-add tabindex="-1">{{ 'products.add_to_cart' | t }}</button>{%- endif -%}
+</div>
+
+{%- comment -%} Lightbox shell (filled by product.js) {%- endcomment -%}
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="{{ 'products.photos_of' | t: name: name | escape }}" aria-hidden="true">
+  <div class="lightbox__bar"><span data-lb-count></span><button class="icon-btn" type="button" data-lb-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button></div>
+  <div class="lightbox__stage" data-lb-stage><img alt="" data-lb-img width="1600" height="1600">
+    {%- if media_count > 1 -%}
+      <button class="icon-btn lightbox__nav lightbox__nav--prev" type="button" data-lb="-1" aria-label="{{ 'products.previous_photo' | t }}">{% render 'icon', name: 'arrow-l' %}</button>
+      <button class="icon-btn lightbox__nav lightbox__nav--next" type="button" data-lb="1" aria-label="{{ 'products.next_photo' | t }}">{% render 'icon', name: 'arrow' %}</button>
+    {%- endif -%}
+  </div>
+  <div class="lightbox__thumbs">{%- if media_count > 1 -%}{%- for m in product.media -%}<button type="button" data-lb-go="{{ forloop.index0 }}" aria-label="{{ 'products.photo_n' | t: n: forloop.index }}"><img src="{{ m.preview_image | image_url: width: 160 }}" alt="" loading="lazy" width="64" height="64"></button>{%- endfor -%}{%- endif -%}</div>
+</div>
+
+{% render 'schema-product', product: product %}
+<script type="application/json" data-product-ga>{"item_id":"{{ v.id }}","item_name":{{ product.title | json }},"item_category":{{ category | json }},"item_brand":{{ product.vendor | json }},"price":{{ v.price | divided_by: 100.0 }},"discount":{{ v.compare_at_price | minus: v.price | at_least: 0 | divided_by: 100.0 }}}</script>
+<script src="{{ 'product.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Produit",
+  "class": "section-main-product",
+  "blocks": [
+    { "type": "title", "name": "Titre & dimensions", "limit": 1 },
+    { "type": "price", "name": "Prix", "limit": 1, "settings": [
+      { "type": "text", "id": "credit_text", "label": "Mention crédit", "default": "Crédit gratuit ou classique possible" }
+    ] },
+    { "type": "stock", "name": "Disponibilité", "limit": 1, "settings": [
+      { "type": "text", "id": "in_stock", "label": "Disponible", "default": "Disponible — commande en ligne ou en showroom" },
+      { "type": "text", "id": "out_of_stock", "label": "Indisponible", "default": "Indisponible en ligne — contactez-nous pour un réassort" }
+    ] },
+    { "type": "custom", "name": "Sur mesure (si personnalisable)", "limit": 1, "settings": [
+      { "type": "text", "id": "title", "label": "Titre", "default": "Personnalisable sur mesure" },
+      { "type": "text", "id": "text", "label": "Texte", "default": "Dimensions, angle, coloris et tissus anti-taches." },
+      { "type": "text", "id": "link_label", "label": "Lien WhatsApp", "default": "Demander un devis" }
+    ] },
+    { "type": "buy_buttons", "name": "Boutons d’achat", "limit": 1 },
+    { "type": "perks", "name": "Réassurance", "limit": 1, "settings": [
+      { "type": "text", "id": "delivery_title", "label": "Livraison — titre", "default": "Livraison express sous 48h" },
+      { "type": "text", "id": "delivery_text", "label": "Livraison — texte", "default": "Partout au Maroc · gratuite dans un rayon de 25 km dès 2 500 DH" },
+      { "type": "text", "id": "delivery_custom_title", "label": "Livraison (produit sur mesure) — titre", "default": "Livraison partout au Maroc" },
+      { "type": "text", "id": "delivery_custom", "label": "Livraison (produit sur mesure) — texte", "default": "Délai de fabrication confirmé par votre conseiller · gratuite dans un rayon de 25 km dès 2 500 DH" },
+      { "type": "text", "id": "assembly_title", "label": "Montage — titre", "default": "Montage offert" },
+      { "type": "text", "id": "assembly_text", "label": "Montage — texte", "default": "Par nos techniciens menuisiers" },
+      { "type": "text", "id": "payment_title", "label": "Paiement — titre", "default": "Paiement sécurisé" },
+      { "type": "text", "id": "payment_text", "label": "Paiement — texte", "default": "En ligne, par virement ou en magasin" },
+      { "type": "text", "id": "store_title", "label": "Showroom — titre", "default": "Voir en showroom" },
+      { "type": "text", "id": "store_text", "label": "Showroom — texte", "default": "Casablanca & Rabat · 4 adresses" },
+      { "type": "url", "id": "store_link", "label": "Showroom — lien" }
+    ] },
+    { "type": "details", "name": "Détails (accordéons)", "limit": 1, "settings": [
+      { "type": "text", "id": "description_label", "label": "Titre de la description", "default": "Description" },
+      { "type": "text", "id": "delivery_label", "label": "Titre livraison (si absent de la description)", "default": "Livraison & montage" },
+      { "type": "richtext", "id": "delivery_html", "label": "Texte livraison", "default": "<p>Livraison express sous 48h, partout au Maroc. Livraison gratuite dans un rayon de 25 km dès 2 500 DH d’achat.</p><p>Montage gratuit par notre équipe de techniciens menuisiers.</p>" },
+      { "type": "text", "id": "service_label", "label": "Titre service client", "default": "Service client & réclamations" },
+      { "type": "richtext", "id": "service_html", "label": "Texte service client", "default": "<p>Inspectez votre commande à la réception et contactez-nous immédiatement en cas de défaut. Notre service client est à votre écoute au 06 61 05 47 64 et sur WhatsApp.</p>" }
+    ] },
+    { "type": "text", "name": "Texte libre", "settings": [{ "type": "richtext", "id": "text", "label": "Texte" }] }
+  ]
+}
+{% endschema %}

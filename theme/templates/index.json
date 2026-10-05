@@ -1,0 +1,762 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-shoppable",
+      "settings": {
+        "eyebrow": "Nouvelle collection",
+        "title": "Le design qui <em>transforme</em> votre intérieur.",
+        "text": "Salons sur mesure, tables, chambres : 30 ans d’expertise au prix d’usine, livrés et montés chez vous.",
+        "cta1_label": "Découvrir la collection",
+        "cta1_link": "shopify://collections/nouvelle-collection-1",
+        "cta2_label": "Voir nos salons",
+        "cta2_link": "shopify://collections/salons-d-angle-sur-mesure",
+        "product": "salon-aura-canape-d-angle-design",
+        "hotspot_x": 47,
+        "hotspot_y": 56,
+        "index_menu": "pieces-de-vie",
+        "image_alt": "Salon d’angle Aura dans un séjour lumineux"
+      }
+    },
+    "trust": {
+      "type": "trust-bar",
+      "settings": {
+        "aria_label": "Nos engagements"
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "key": "30 <em>ans</em>",
+            "value": "d’expertise dans l’ameublement"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "key": "48<em>h</em>",
+            "value": "Livraison express, partout au Maroc"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "key": "Montage",
+            "value": "offert, par nos menuisiers"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "key": "Conseil <em>déco</em>",
+            "value": "gratuit avec Home Décor"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ]
+    },
+    "rooms": {
+      "type": "rooms-grid",
+      "settings": {
+        "eyebrow": "Par pièce de vie",
+        "title": "Aménagez chaque <em>espace</em>.",
+        "text": "Pensez votre intérieur pièce par pièce : salons, salles à manger, chambres et rangements, réunis au même endroit."
+      },
+      "blocks": {
+        "room_1": {
+          "type": "room",
+          "settings": {
+            "title": "Salon",
+            "collection": "salons-d-angle-sur-mesure",
+            "extra_collections": [
+              "salons-d-angle-sur-mesure",
+              "salon-en-u",
+              "salon-marocain",
+              "salon-3-2-1",
+              "canape-sofa",
+              "canapes-clic-clac",
+              "meridienne-1",
+              "fauteuil-1",
+              "poufs"
+            ],
+            "image_product": "salon-angle-lumia-400x220-panoramique-bois-massif",
+            "link": ""
+          }
+        },
+        "room_2": {
+          "type": "room",
+          "settings": {
+            "title": "Salle à manger",
+            "collection": "table-a-manger-1",
+            "extra_collections": [
+              "table-a-manger-1",
+              "chaises-1",
+              "buffets",
+              "console-1"
+            ],
+            "image_product": "table-a-manger-ronde-avec-6-chaises",
+            "link": ""
+          }
+        },
+        "room_3": {
+          "type": "room",
+          "settings": {
+            "title": "Chambre",
+            "collection": "lits-adulte-1",
+            "extra_collections": [
+              "lits-adulte-1",
+              "chevet",
+              "commode-1",
+              "matelas"
+            ],
+            "image_product": "lit-terracotta-design-audacieux-confort-premium",
+            "link": ""
+          }
+        },
+        "room_4": {
+          "type": "room",
+          "settings": {
+            "title": "Rangement",
+            "collection": "rangements",
+            "extra_collections": [
+              "armoire-1",
+              "meuble-a-chaussures-1",
+              "petit-rangement-1",
+              "rangements"
+            ],
+            "image_product": "buffet-1",
+            "link": ""
+          }
+        },
+        "room_5": {
+          "type": "room",
+          "settings": {
+            "title": "Chambre enfant",
+            "collection": "lits-enfants",
+            "extra_collections": [
+              "lits-enfants",
+              "bureaux-enfants",
+              "chaises-de-bureaux"
+            ],
+            "image_product": "lit-enfant-tapisse-arc-en-ciel-90x200-multicolore",
+            "link": ""
+          }
+        },
+        "room_6": {
+          "type": "room",
+          "settings": {
+            "title": "Jardin",
+            "collection": "espace-dexterieur",
+            "extra_collections": [
+              "espace-dexterieur"
+            ],
+            "image_product": "salon-dexterieur-belen",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "room_1",
+        "room_2",
+        "room_3",
+        "room_4",
+        "room_5",
+        "room_6"
+      ]
+    },
+    "campaign": {
+      "type": "campaign",
+      "settings": {
+        "eyebrow": "Offres du moment",
+        "title": "Les<br>Soldes",
+        "text": "Méridiennes, lits et fauteuils à prix doux, dans la limite des stocks disponibles.",
+        "show_upto": true,
+        "panel_color": "#F0BA16",
+        "text_color": "#24201D",
+        "products": [
+          "meridienne-bobo-bouclette-gris-perle-sur-mesure",
+          "lit-tapisse-tio-creme-boucle-design-galbe-sommier",
+          "fauteuil-palvin-tissu-orange-socle-bois-massif"
+        ],
+        "collection": "super-deals",
+        "cta_label": "Voir toutes les offres",
+        "cta_link": "shopify://collections/super-deals",
+        "list_name": "campaign_soldes"
+      }
+    },
+    "selection": {
+      "type": "product-tabs",
+      "settings": {
+        "eyebrow": "La sélection du moment",
+        "title": "Nos pièces <em>favorites</em>.",
+        "limit": 8
+      },
+      "blocks": {
+        "tab_1": {
+          "type": "tab",
+          "settings": {
+            "label": "Salons",
+            "products": [
+              "salon-angle-mona-270x205-bois-massif-moderne",
+              "salon-angle-lumia-400x220-panoramique-bois-massif",
+              "salon-angle-valmora-390x290-design-organique-bois-massif",
+              "salon-angle-calypso-260x340-confort-lounge-maroc",
+              "salon-d-angle-harmony",
+              "salon-d-angle-optima-280x200-bois-massif-moderne",
+              "salon-en-u-cosmo-200-400-200-bois-massif",
+              "salon-angle-magellan-280x200-pieds-metal-noir"
+            ],
+            "collection": "salons-d-angle-sur-mesure"
+          }
+        },
+        "tab_2": {
+          "type": "tab",
+          "settings": {
+            "label": "Chambre",
+            "products": [
+              "lit-tapisse-hania-160x200-tissu-bouclette-design-chic",
+              "lit-terracotta-design-audacieux-confort-premium",
+              "lit-tapisse-dolce-velours-beige-personnalisable",
+              "lit-pure-elegance-minimaliste-serenite-absolue",
+              "lit-tapisse-capiton-velours-bleu-sommier-personnalisable",
+              "lit-tapisse-fresh-velours-vert-olive-pieds-bois",
+              "lit-tapisse-tio-creme-boucle-design-galbe-sommier",
+              "lit-enjoy-personnalisable-couleurs-dimensions"
+            ],
+            "collection": "lits-adulte-1"
+          }
+        },
+        "tab_3": {
+          "type": "tab",
+          "settings": {
+            "label": "Salle à manger",
+            "products": [
+              "table-a-manger-ronde-avec-6-chaises",
+              "table-a-manger-avec-6-chaises-4",
+              "ensemble-table-a-manger-dayton-en-bois-massif-6-chaises-180x100-cm",
+              "table-manger-en-bois",
+              "tablea-manger-en-marbre-avec-6-chaise",
+              "table-a-manger-plateau-en-ceramique-avec-6-chaise",
+              "table-ronde-1m-avec-4-chaises",
+              "buffet-chic-bois-massif"
+            ],
+            "collection": "table-a-manger-1"
+          }
+        },
+        "tab_4": {
+          "type": "tab",
+          "settings": {
+            "label": "Petits prix",
+            "products": [
+              "fauteuil-hermes-design-organique-blanc-creme",
+              "fauteuil-palvin-tissu-orange-socle-bois-massif",
+              "table-basse-lyora-raffinement-naturel",
+              "duo-tables-basses-brave-ref-2555-bois-massif",
+              "pouf-andrya-rond-bouclette-socle-bois",
+              "table-de-chevet-1",
+              "buffet-uno",
+              "trio-table-basse-en-bois-1"
+            ],
+            "collection": "table-basse-1"
+          }
+        }
+      },
+      "block_order": [
+        "tab_1",
+        "tab_2",
+        "tab_3",
+        "tab_4"
+      ]
+    },
+    "story": {
+      "type": "brand-story",
+      "settings": {
+        "eyebrow": "Mobilia Home depuis 30 ans",
+        "title": "Des meubles pensés pour être <em>vécus</em>.",
+        "text": "<p>Depuis trois décennies, Mobilia accompagne les familles marocaines dans l’aménagement de leur intérieur. Nous sélectionnons des pièces au design actuel, au prix d’usine, et nous les livrons et les montons chez vous.</p>",
+        "image_product": "salon-angle-mona-270x205-bois-massif-moderne",
+        "image_2_product": "fauteuil-hermes-design-organique-blanc-creme",
+        "cta_label": "Nos services",
+        "cta_link": "/#services"
+      },
+      "blocks": {
+        "pillar_1": {
+          "type": "pillar",
+          "settings": {
+            "title": "Prix d’usine",
+            "text": "Le design contemporain, sans intermédiaire superflu."
+          }
+        },
+        "pillar_2": {
+          "type": "pillar",
+          "settings": {
+            "title": "Sur mesure",
+            "text": "Salons d’angle personnalisables : dimensions, angle, coloris, tissus anti-taches."
+          }
+        },
+        "pillar_3": {
+          "type": "pillar",
+          "settings": {
+            "title": "Home Décor",
+            "text": "Nos experts en décoration vous conseillent, pour tous les budgets."
+          }
+        }
+      },
+      "block_order": [
+        "pillar_1",
+        "pillar_2",
+        "pillar_3"
+      ]
+    },
+    "looks": {
+      "type": "shop-the-look",
+      "settings": {
+        "eyebrow": "Inspirations achetables",
+        "title": "Composez la pièce, <em>pas seulement</em> le meuble.",
+        "text": "Chaque scène réunit une pièce maîtresse et les meubles de notre catalogue qui l’accompagnent. Ajoutez-les directement au panier."
+      },
+      "blocks": {
+        "scene_1": {
+          "type": "scene",
+          "settings": {
+            "label": "Salon contemporain",
+            "title": "Un salon ouvert, pensé pour recevoir",
+            "intro": "Le salon d’angle Valmora, ses lignes organiques et nos pièces pour l’accompagner.",
+            "product": "salon-angle-valmora-390x290-design-organique-bois-massif",
+            "x": 46,
+            "y": 60,
+            "pair": [
+              "duo-tables-basses-brave-ref-2555-bois-massif",
+              "fauteuil-hermes-design-organique-blanc-creme",
+              "pouf-andrya-rond-bouclette-socle-bois",
+              "meuble-tv-chic"
+            ]
+          }
+        },
+        "scene_2": {
+          "type": "scene",
+          "settings": {
+            "label": "Salle à manger",
+            "title": "Une table ronde pour six convives",
+            "intro": "Bois chaleureux, assises enveloppantes et rangements assortis.",
+            "product": "table-a-manger-ronde-avec-6-chaises",
+            "x": 50,
+            "y": 58,
+            "pair": [
+              "buffet-chic-bois-massif",
+              "buffet-1",
+              "console-dentree-avec-miroir-cadre-aluminium-plateau-console-en-verre"
+            ]
+          }
+        },
+        "scene_3": {
+          "type": "scene",
+          "settings": {
+            "label": "Chambre",
+            "title": "Une chambre douce et enveloppante",
+            "intro": "Le lit Hania en bouclette, avec chevets, commode et matelas.",
+            "product": "lit-tapisse-hania-160x200-tissu-bouclette-design-chic",
+            "x": 50,
+            "y": 62,
+            "pair": [
+              "table-de-chevet-1",
+              "commode-3-tiroirs",
+              "matelas-smart-160x200cm"
+            ]
+          }
+        },
+        "scene_4": {
+          "type": "scene",
+          "settings": {
+            "label": "Jardin",
+            "title": "Le jardin comme une pièce à vivre",
+            "intro": "Un salon d’extérieur en bois pour les longues soirées d’été.",
+            "product": "salon-d-exterieur-curly",
+            "x": 55,
+            "y": 62,
+            "pair": [
+              "salon-dexterieur-belen",
+              "salon-dexterieur-consoude"
+            ]
+          }
+        }
+      },
+      "block_order": [
+        "scene_1",
+        "scene_2",
+        "scene_3",
+        "scene_4"
+      ]
+    },
+    "packs": {
+      "type": "packs",
+      "settings": {
+        "eyebrow": "Packs Mobilia",
+        "title": "Des packs pour aménager <em>plus simplement</em>.",
+        "text": "Des ensembles coordonnés, pensés par pièce, avec un prix d’ensemble plus doux que l’achat séparé.",
+        "collection": "packs",
+        "cta_label": "Tous les packs"
+      },
+      "blocks": {
+        "pack_1": {
+          "type": "pack",
+          "settings": {
+            "product": "pack-chambre-a-coucher-bellat-lit-rangement-6-pieces",
+            "name": "Pack chambre Bellat",
+            "badge": "Pack chambre",
+            "items": "Lit 160 × 200 cm\nSommier de rangement\n2 chevets\nCommode\nMiroir"
+          }
+        },
+        "pack_2": {
+          "type": "pack",
+          "settings": {
+            "product": "pack-chambre-a-coucher-ayrupa-lit-160x200-complet",
+            "name": "Pack chambre Ayrupa",
+            "badge": "Pack chambre",
+            "items": "Lit 160 × 200 cm\nSommier\n2 chevets\nCommode\nMiroir"
+          }
+        },
+        "pack_3": {
+          "type": "pack",
+          "settings": {
+            "product": "pack-chambre-a-coucher-linen-lit-rangement-5-pieces",
+            "name": "Pack chambre Linen",
+            "badge": "Pack chambre",
+            "items": "Lit 160 × 200 cm avec rangement\nSommier\n2 chevets"
+          }
+        },
+        "pack_4": {
+          "type": "pack",
+          "settings": {
+            "product": "pack-table-a-manger-wood-avec-6-chaises",
+            "name": "Pack salle à manger Wood",
+            "badge": "Salle à manger",
+            "items": "Table 160 × 90 cm bois massif\n6 chaises"
+          }
+        }
+      },
+      "block_order": [
+        "pack_1",
+        "pack_2",
+        "pack_3",
+        "pack_4"
+      ]
+    },
+    "project": {
+      "type": "interior-project",
+      "settings": {
+        "eyebrow": "Home Décor · conseil gratuit",
+        "title": "Vous avez un projet d’aménagement ?",
+        "text": "Envoyez-nous vos dimensions, votre budget et vos inspirations. Nos experts en décoration vous écoutent, vous conseillent et vous accompagnent — pour tous les budgets.",
+        "cta_label": "Parler à un conseiller déco",
+        "whatsapp_message": "Bonjour Mobilia, j’ai un projet d’aménagement et j’aimerais être conseillé(e). Pièce : … / Dimensions : … / Budget : …",
+        "cta2_label": "Venir en showroom",
+        "cta2_link": "/#magasins"
+      },
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Vous partagez votre espace",
+            "text": "Un message WhatsApp avec vos mesures, quelques photos ou simplement une idée."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "Nous vous conseillons",
+            "text": "Nos experts Home Décor proposent les pièces, les formats et les teintes adaptés."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Vous choisissez votre mobilier",
+            "text": "En ligne ou en showroom, avec la possibilité du sur-mesure et du crédit gratuit."
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "title": "Mobilia livre et installe",
+            "text": "Livraison partout au Maroc et montage offert par nos techniciens menuisiers."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4"
+      ]
+    },
+    "outlet": {
+      "type": "outlet-index",
+      "settings": {
+        "collection": "outlet-roches-noires",
+        "eyebrow": "Mobilia Outlet",
+        "title": "Les belles pièces. Les derniers <em>prix</em>.",
+        "text": "Fins de séries et pièces d’exposition à prix réduits, à découvrir en ligne et dans notre showroom de Roches Noires.",
+        "address": "315, Av. Ambassadeur Ben Aicha, Quartier Roches Noires, Casablanca",
+        "watermark": "Outlet",
+        "rows": 6,
+        "cta_label": "Découvrir l’Outlet"
+      }
+    },
+    "services": {
+      "type": "services",
+      "settings": {
+        "eyebrow": "Nos services",
+        "title": "Bien plus qu’un <em>meuble</em>.",
+        "text": "De la livraison express au conseil en décoration, nous vous accompagnons jusqu’à l’installation."
+      },
+      "blocks": {
+        "service_1": {
+          "type": "service",
+          "settings": {
+            "icon": "truck",
+            "title": "Livraison express",
+            "text": "Recevez vos achats sous 48h, qu’ils soient effectués en magasin ou en ligne. Livraison partout au Maroc.",
+            "feature": false,
+            "link_label": "",
+            "whatsapp_message": ""
+          }
+        },
+        "service_2": {
+          "type": "service",
+          "settings": {
+            "icon": "pin",
+            "title": "Livraison offerte",
+            "text": "Gratuite dans un rayon de 25 km dès 2 500 DH d’achat.",
+            "feature": false,
+            "link_label": "",
+            "whatsapp_message": ""
+          }
+        },
+        "service_3": {
+          "type": "service",
+          "settings": {
+            "icon": "tool",
+            "title": "Montage gratuit",
+            "text": "Une équipe de techniciens menuisiers formés et expérimentés installe votre mobilier.",
+            "feature": false,
+            "link_label": "",
+            "whatsapp_message": ""
+          }
+        },
+        "service_4": {
+          "type": "service",
+          "settings": {
+            "icon": "spark",
+            "title": "Home Décor",
+            "text": "Un service conseil en décoration adapté à tous les budgets.",
+            "feature": true,
+            "link_label": "Prendre conseil",
+            "whatsapp_message": "Bonjour Mobilia, je souhaite bénéficier du service Home Décor."
+          }
+        },
+        "service_5": {
+          "type": "service",
+          "settings": {
+            "icon": "card",
+            "title": "Crédit gratuit",
+            "text": "Crédits gratuits ou classiques à taux très intéressants, avec des organismes de crédit de renom.",
+            "feature": false,
+            "link_label": "",
+            "whatsapp_message": ""
+          }
+        },
+        "service_6": {
+          "type": "service",
+          "settings": {
+            "icon": "ruler",
+            "title": "Sur mesure",
+            "text": "Salons d’angle et packs chambre personnalisables : dimensions, coloris, tissus anti-taches.",
+            "feature": false,
+            "link_label": "",
+            "whatsapp_message": ""
+          }
+        },
+        "service_7": {
+          "type": "service",
+          "settings": {
+            "icon": "gift",
+            "title": "My Wishlist",
+            "text": "Mariage, naissance, anniversaire : ouvrez votre liste et profitez de −5 % sur les achats de vos proches, et d’un bon cadeau surprise.",
+            "feature": false,
+            "link_label": "",
+            "whatsapp_message": ""
+          }
+        },
+        "service_8": {
+          "type": "service",
+          "settings": {
+            "icon": "chat",
+            "title": "À votre écoute",
+            "text": "Une question, une réclamation ? Notre service client répond au 06 61 05 47 64 et sur WhatsApp.",
+            "feature": false,
+            "link_label": "",
+            "whatsapp_message": ""
+          }
+        }
+      },
+      "block_order": [
+        "service_1",
+        "service_2",
+        "service_3",
+        "service_4",
+        "service_5",
+        "service_6",
+        "service_7",
+        "service_8"
+      ]
+    },
+    "stores": {
+      "type": "stores",
+      "settings": {
+        "eyebrow": "Nos showrooms",
+        "title": "Découvrez Mobilia <em>près de chez vous</em>.",
+        "text": "Venez voir, toucher et essayer nos salons avant de choisir. Nos conseillers vous accueillent à Casablanca et à Rabat.",
+        "image_product": "salon-angle-calypso-260x340-confort-lounge-maroc"
+      }
+    },
+    "journal": {
+      "type": "journal",
+      "settings": {
+        "blog": "news",
+        "eyebrow": "Inspirations & conseils",
+        "title": "Le journal <em>Mobilia</em>."
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "eyebrow": "Questions fréquentes",
+        "title": "Tout savoir avant de <em>commander</em>.",
+        "text": "Livraison, montage, paiement, sur-mesure : les réponses de notre service client.",
+        "cta_label": "Poser une autre question",
+        "whatsapp_message": "Bonjour Mobilia, j’ai une question.",
+        "open_first": true,
+        "flush_top": true
+      },
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "Quels sont les délais de livraison ?",
+            "answer": "<p>Avec notre service Livraison Express, vous recevez vos achats sous 48h, qu’ils soient effectués en magasin ou en ligne. Nous préparons soigneusement votre commande et la livrons directement à votre adresse, partout au Maroc.</p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "La livraison est-elle gratuite ?",
+            "answer": "<p>La livraison est gratuite dans un rayon de 25 km dès 2 500 DH d’achat. Au-delà, la livraison reste disponible partout au Maroc : notre service client vous en précise les conditions.</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Le montage est-il inclus ?",
+            "answer": "<p>Oui, le montage est gratuit. Notre équipe est composée de techniciens menuisiers formés et expérimentés dans les travaux d’ébénisterie, de montage et d’aménagement.</p>"
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "Quels sont les moyens de paiement ?",
+            "answer": "<p>Vous pouvez régler en ligne de façon sécurisée, par virement bancaire ou en magasin. Pour les modèles fabriqués sur mesure, une avance de 30 % est demandée pour lancer la fabrication.</p>"
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je payer en plusieurs fois ?",
+            "answer": "<p>Oui. Nous proposons des crédits gratuits ou classiques, à des taux très intéressants, offerts par des organismes de crédit de renom. Renseignez-vous auprès de nos conseillers en showroom ou sur WhatsApp.</p>"
+          }
+        },
+        "question_6": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je personnaliser mon salon ?",
+            "answer": "<p>Nos salons d’angle sont personnalisables : dimensions ajustables, choix de l’angle, large choix de coloris et tissus anti-taches. Faites une demande de devis personnalisé à nos conseillers.</p>"
+          }
+        },
+        "question_7": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je voir les meubles avant d’acheter ?",
+            "answer": "<p>Oui. Nos showrooms de Casablanca (Bourgogne, Boulevard Ghandi, Roches Noires) et de Rabat (Agdal) vous accueillent. Certains modèles sont disponibles à l’essai au showroom Bourgogne.</p>"
+          }
+        },
+        "question_8": {
+          "type": "question",
+          "settings": {
+            "question": "Proposez-vous un conseil en décoration ?",
+            "answer": "<p>Oui, avec Home Décor : nos experts en décoration vous écoutent, vous conseillent et vous accompagnent dans la réalisation de vos projets. Un service adapté à tous les budgets.</p>"
+          }
+        },
+        "question_9": {
+          "type": "question",
+          "settings": {
+            "question": "Comment retourner un article ?",
+            "answer": "<p>Pour être éligible à un retour, l’article doit être dans l’état où vous l’avez reçu, inutilisé, dans son emballage d’origine et accompagné de la preuve d’achat. Les articles soldés et les produits sur mesure ne peuvent pas être retournés. Contactez-nous à triangledormobilia@gmail.com pour toute demande.</p>"
+          }
+        },
+        "question_10": {
+          "type": "question",
+          "settings": {
+            "question": "Comment faire une réclamation ?",
+            "answer": "<p>Notre service client est à votre écoute au 06 61 05 47 64 et sur WhatsApp (service réclamation). Inspectez votre commande à la réception et contactez-nous immédiatement en cas de défaut.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5",
+        "question_6",
+        "question_7",
+        "question_8",
+        "question_9",
+        "question_10"
+      ]
+    },
+    "final": {
+      "type": "final-cta",
+      "settings": {
+        "image_product": "salon-angle-lumia-400x220-panoramique-bois-massif",
+        "eyebrow": "Mobilia Home",
+        "title": "Votre intérieur commence <em>ici</em>.",
+        "text": "Découvrez nos collections ou parlez à l’un de nos conseillers : nous vous répondons sur WhatsApp.",
+        "cta_label": "Découvrir les collections",
+        "cta_link": "shopify://collections/salons-d-angle-sur-mesure",
+        "cta2_label": "Parler à un conseiller",
+        "whatsapp_message": "Bonjour Mobilia, j’aimerais être conseillé(e) pour mon intérieur."
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "trust",
+    "rooms",
+    "campaign",
+    "selection",
+    "story",
+    "looks",
+    "packs",
+    "project",
+    "outlet",
+    "services",
+    "stores",
+    "journal",
+    "faq",
+    "final"
+  ]
+}

@@ -1,0 +1,60 @@
+{%- comment -%}
+  "Nos pièces favorites": one grid, several merchandising angles (tabs). Each tab = a block with a
+  curated product list or a collection. All panels are server-rendered; tabs only toggle visibility
+  (no extra requests, crawlable links).
+{%- endcomment -%}
+<section class="section" aria-labelledby="tabs-{{ section.id }}" data-tabs>
+  <div class="container">
+    <div class="section-head">
+      <div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2 section-head__title" id="tabs-{{ section.id }}">{{ section.settings.title }}</h2></div>
+      {%- if section.blocks.size > 1 -%}
+        <div class="tabs" role="tablist" aria-label="{{ section.settings.eyebrow | escape }}">
+          {%- for block in section.blocks -%}
+            <button class="chip" type="button" role="tab" id="tab-{{ block.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="panel-{{ block.id }}"{% unless forloop.first %} tabindex="-1"{% endunless %} {{ block.shopify_attributes }}>{{ block.settings.label }}</button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign items = block.settings.products
+        if items == blank
+          assign items = block.settings.collection.products
+        endif
+      -%}
+      <div class="selection__panel" id="panel-{{ block.id }}" role="tabpanel" aria-labelledby="tab-{{ block.id }}" data-list="selection_{{ block.settings.label | handleize }}"{% unless forloop.first %} hidden{% endunless %}>
+        <div class="product-grid">
+          {%- for p in items limit: section.settings.limit -%}
+            {% render 'product-card', product: p, list: block.settings.label %}
+          {%- endfor -%}
+        </div>
+        {%- if block.settings.collection != blank -%}
+          <div class="selection__foot"><a class="btn btn--ghost" href="{{ block.settings.collection.url }}">{{ 'products.see_collection' | t }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a></div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Sélection à onglets",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "La sélection du moment" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Nos pièces <em>favorites</em>." },
+    { "type": "range", "id": "limit", "label": "Produits par onglet", "min": 4, "max": 12, "step": 4, "default": 8 }
+  ],
+  "blocks": [
+    { "type": "tab", "name": "Onglet", "limit": 5, "settings": [
+      { "type": "text", "id": "label", "label": "Libellé", "default": "Salons" },
+      { "type": "product_list", "id": "products", "label": "Produits (sélection manuelle)", "limit": 12 },
+      { "type": "collection", "id": "collection", "label": "Collection (source ou lien « voir tout »)" }
+    ] }
+  ],
+  "presets": [{ "name": "Sélection à onglets", "blocks": [
+    { "type": "tab", "settings": { "label": "Salons" } },
+    { "type": "tab", "settings": { "label": "Chambre" } },
+    { "type": "tab", "settings": { "label": "Salle à manger" } },
+    { "type": "tab", "settings": { "label": "Petits prix" } }
+  ] }]
+}
+{% endschema %}

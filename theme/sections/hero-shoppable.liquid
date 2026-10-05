@@ -1,0 +1,70 @@
+{%- comment -%}
+  Editorial, shoppable hero: copy column + large photo with a product tag (real price) and hotspot.
+  Desktop/mobile images, copy, CTAs, featured product, hotspot position and room index are editable.
+{%- endcomment -%}
+{%- liquid
+  assign p = section.settings.product
+  assign img_d = section.settings.image | default: p.featured_media.preview_image
+  assign img_m = section.settings.image_mobile | default: img_d
+-%}
+<section class="hero" aria-labelledby="hero-title-{{ section.id }}">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      {%- if section.settings.eyebrow != blank -%}<p class="label hero__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h1 class="display hero__title" id="hero-title-{{ section.id }}">{{ section.settings.title }}</h1>
+      {%- if section.settings.text != blank -%}<p class="body-l hero__text">{{ section.settings.text }}</p>{%- endif -%}
+      <div class="hero__ctas">
+        {%- if section.settings.cta1_label != blank -%}<a class="btn" href="{{ section.settings.cta1_link }}">{{ section.settings.cta1_label }} {% render 'icon', name: 'arrow', class: 'i-arrow' %}</a>{%- endif -%}
+        {%- if section.settings.cta2_label != blank -%}<a class="link-arrow" href="{{ section.settings.cta2_link }}">{{ section.settings.cta2_label }} {% render 'icon', name: 'arrow' %}</a>{%- endif -%}
+      </div>
+      {%- assign index_links = linklists[section.settings.index_menu].links -%}
+      {%- if index_links.size > 0 -%}
+        <ol class="hero__index" role="list" aria-label="{{ 'hero.rooms' | t }}">
+          {%- for l in index_links limit: 6 -%}<li><a href="{{ l.url }}"><span>0{{ forloop.index }}</span>{{ l.title }}</a></li>{%- endfor -%}
+        </ol>
+      {%- endif -%}
+    </div>
+    <div class="hero__media">
+      <div class="media">
+        <picture>
+          {%- if img_m != img_d -%}
+            <source media="(max-width: 1023px)" srcset="{{ img_m | image_url: width: 750 }} 750w, {{ img_m | image_url: width: 1100 }} 1100w, {{ img_m | image_url: width: 1500 }} 1500w" sizes="100vw">
+          {%- endif -%}
+          {% render 'image', image: img_d, sizes: '(min-width:1024px) 58vw, 100vw', eager: true, max: 2000, alt: section.settings.image_alt %}
+        </picture>
+      </div>
+      {%- if p != blank -%}
+        <span class="hero__hotspot" style="left:{{ section.settings.hotspot_x }}%;top:{{ section.settings.hotspot_y }}%" aria-hidden="true"></span>
+        <a class="hero__tag" href="{{ p.url }}" data-handle="{{ p.handle }}">
+          <span class="pin" aria-hidden="true"></span>
+          <p><span class="label muted" style="font-size:.625rem">{{ p.metafields.mobilia.category.value | default: p.type }}</span><strong>{{ p.metafields.mobilia.display_name.value | default: p.title | split: ' – ' | first }}</strong>{% render 'price', product: p, show_off: false %}</p>
+          {% render 'icon', name: 'arrow' %}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Hero éditorial",
+  "class": "section-hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image desktop", "info": "Sinon : photo du produit mis en avant." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Image mobile (optionnelle)" },
+    { "type": "text", "id": "image_alt", "label": "Texte alternatif de l’image" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Nouvelle collection" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre (italique = mot mis en valeur)", "default": "Le design qui <em>transforme</em> votre intérieur." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Salons sur mesure, tables, chambres : 30 ans d’expertise au prix d’usine, livrés et montés chez vous." },
+    { "type": "text", "id": "cta1_label", "label": "Bouton principal", "default": "Découvrir la collection" },
+    { "type": "url", "id": "cta1_link", "label": "Lien principal" },
+    { "type": "text", "id": "cta2_label", "label": "Lien secondaire", "default": "Voir nos salons" },
+    { "type": "url", "id": "cta2_link", "label": "URL secondaire" },
+    { "type": "header", "content": "Produit étiqueté" },
+    { "type": "product", "id": "product", "label": "Produit dans la photo" },
+    { "type": "range", "id": "hotspot_x", "label": "Point — horizontal", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 47 },
+    { "type": "range", "id": "hotspot_y", "label": "Point — vertical", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 56 },
+    { "type": "link_list", "id": "index_menu", "label": "Index des pièces (menu)", "info": "Ex. un menu « Pièces de vie » : Salon, Salle à manger, Chambre…" }
+  ],
+  "presets": [{ "name": "Hero éditorial" }]
+}
+{% endschema %}

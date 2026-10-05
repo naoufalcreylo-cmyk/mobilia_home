@@ -1,0 +1,67 @@
+{%- comment -%}
+  Showrooms. Source of truth = metaobjects of type "store" (Contenu > Métaobjets), reused by the
+  LocalBusiness schema. Fields: name, city, tag, address, phones (list), opening_hours (optional),
+  map_url (optional). Empty fields are simply not shown — no placeholder hours.
+{%- endcomment -%}
+{%- assign stores = shop.metaobjects.store.values -%}
+<section class="section section--linen" id="magasins" aria-labelledby="stores-{{ section.id }}" data-stores>
+  <div class="container">
+    <div class="section-head">
+      <div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2 section-head__title" id="stores-{{ section.id }}">{{ section.settings.title }}</h2></div>
+      {%- if section.settings.text != blank -%}<div class="section-head__aside">{{ section.settings.text }}</div>{%- endif -%}
+    </div>
+    <div class="stores__grid">
+      <div class="stores__media"><div class="media">{%- assign simg = section.settings.image | default: section.settings.image_product.featured_media.preview_image -%}{% render 'image', image: simg, sizes: '(min-width:1024px) 48vw, 100vw', max: 1600, alt: '' %}</div></div>
+      <div class="stores__list">
+        {%- liquid
+          assign cities = ''
+          for s in stores
+            assign cities = cities | append: s.city.value | append: '|'
+          endfor
+          assign cities = cities | split: '|' | uniq
+        -%}
+        {%- if cities.size > 1 -%}
+          <div class="tabs" role="group" aria-label="{{ 'stores.filter' | t }}">
+            <button class="chip" type="button" aria-pressed="true" data-city="">{{ 'stores.all' | t }}</button>
+            {%- for city in cities -%}<button class="chip" type="button" aria-pressed="false" data-city="{{ city | escape }}">{{ city }}</button>{%- endfor -%}
+          </div>
+        {%- endif -%}
+        <div aria-live="polite">
+          {%- for s in stores -%}
+            {%- assign map = s.map_url.value -%}
+            {%- if map == blank -%}{%- capture map -%}https://www.google.com/maps/search/?api=1&query={{ shop.name | append: ' ' | append: s.address | append: ', ' | append: s.city | url_encode }}{%- endcapture -%}{%- endif -%}
+            <article class="store" data-city="{{ s.city.value | escape }}">
+              <div class="store__name"><h3>{{ s.name }}</h3><span class="badge {% if s.tag.value == 'Outlet' %}badge--dark{% else %}badge--muted{% endif %}">{{ s.city }}{% if s.tag != blank %} · {{ s.tag }}{% endif %}</span></div>
+              <p class="store__addr">{{ s.address }}, {{ s.city }}</p>
+              {%- if s.phones != blank -%}
+                <p class="store__phones">{%- for t in s.phones.value -%}<a href="tel:+212{{ t | remove: ' ' | remove_first: '0' }}">{{ t }}</a>{%- endfor -%}</p>
+              {%- endif -%}
+              {%- if s.opening_hours != blank -%}<p class="store__hours">{{ s.opening_hours }}</p>{%- endif -%}
+              <div class="store__actions">
+                <a class="btn btn--ghost btn--sm" href="{{ map }}" target="_blank" rel="noopener">{% render 'icon', name: 'map' %}{{ 'stores.directions' | t }}</a>
+                {%- assign msg = 'stores.visit_message' | t: store: s.name, city: s.city -%}
+                <a class="btn btn--wa btn--sm" href="{% render 'whatsapp-url', message: msg %}" target="_blank" rel="noopener" data-wa-context="store">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ 'stores.notify_visit' | t }}</a>
+              </div>
+            </article>
+          {%- else -%}
+            <p class="muted">{{ 'stores.empty' | t }}</p>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Showrooms",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Nos showrooms" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Découvrez Mobilia <em>près de chez vous</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Venez voir, toucher et essayer nos salons avant de choisir. Nos conseillers vous accueillent à Casablanca et à Rabat." },
+    { "type": "image_picker", "id": "image", "label": "Image (idéalement une vraie photo de showroom)" },
+    { "type": "product", "id": "image_product", "label": "…ou photo d’un produit" },
+    { "type": "paragraph", "content": "Les adresses se gèrent dans Contenu > Métaobjets > Store." }
+  ],
+  "presets": [{ "name": "Showrooms" }]
+}
+{% endschema %}

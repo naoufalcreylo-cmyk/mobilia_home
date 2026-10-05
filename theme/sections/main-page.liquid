@@ -1,0 +1,10 @@
+<article class="section--tight">
+  <div class="container container--narrow">
+    <ol class="crumbs" role="list" aria-label="{{ 'accessibility.breadcrumb' | t }}"><li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li><li><span aria-current="page">{{ page.title }}</span></li></ol>
+    <h1 class="h1" style="margin:1.5rem 0 2rem">{{ page.title }}</h1>
+    <div class="prose body-l" style="max-width:68ch">{{ page.content }}</div>
+  </div>
+</article>
+{% schema %}
+{ "name": "Contenu de page", "settings": [] }
+{% endschema %}

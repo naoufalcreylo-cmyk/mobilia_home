@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "eyebrow": "Roches Noires · Casablanca",
+        "show_image": false,
+        "show_tile": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

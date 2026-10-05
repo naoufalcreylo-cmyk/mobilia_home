@@ -1,0 +1,40 @@
+{%- comment -%} Full cart page (no-JS fallback and direct /cart visits). The drawer is the primary experience. {%- endcomment -%}
+<div class="container section--tight" style="max-width:960px">
+  <h1 class="h1" style="margin-bottom:2rem">{{ 'cart.title' | t }}</h1>
+  {%- if cart.item_count == 0 -%}
+    <div class="empty-state">
+      <div class="empty-state__mark">{% render 'icon', name: 'bag' %}</div>
+      <p class="h3">{{ 'cart.empty_title' | t }}</p><p>{{ 'cart.empty_text' | t }}</p>
+      <a class="btn" href="{{ routes.all_products_collection_url }}">{{ 'collections.browse_all' | t }}</a>
+    </div>
+  {%- else -%}
+    <form action="{{ routes.cart_url }}" method="post" id="cart-page">
+      <ul role="list" style="list-style:none;margin:0;padding:0">
+        {%- for item in cart.items -%}
+          <li class="cart-line">
+            <a class="media" href="{{ item.url }}">{% render 'image', image: item.image, sizes: '96px', max: 240, alt: '' %}</a>
+            <div>
+              <div class="cart-line__top">
+                <div><a class="cart-line__name" href="{{ item.url }}">{{ item.product.title }}</a>{%- unless item.product.has_only_default_variant -%}<p class="cart-line__meta">{{ item.variant.title }}</p>{%- endunless -%}</div>
+                <div class="cart-line__price"><span class="price">{{ item.final_line_price | money }}</span></div>
+              </div>
+              <div class="cart-line__bottom">
+                <label class="visually-hidden" for="qty-{{ forloop.index }}">{{ 'cart.quantity' | t: name: item.product.title | escape }}</label>
+                <input class="input" style="width:90px;min-height:44px" id="qty-{{ forloop.index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+                <a class="cart-line__remove" href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
+              </div>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <div style="margin-top:2rem;display:grid;gap:.75rem;justify-items:end">
+        <div class="cart-sum" style="gap:2rem"><span>{{ 'cart.subtotal' | t }}</span><span class="price">{{ cart.total_price | money }}</span></div>
+        <p class="cart-note">{{ 'cart.taxes_note' | t }}</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap"><button class="btn btn--ghost" type="submit" name="update">{{ 'cart.update' | t }}</button><button class="btn" type="submit" name="checkout">{{ 'cart.checkout' | t }}</button></div>
+      </div>
+    </form>
+  {%- endif -%}
+</div>
+{% schema %}
+{ "name": "Panier", "settings": [] }
+{% endschema %}

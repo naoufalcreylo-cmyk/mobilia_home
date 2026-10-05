@@ -1,0 +1,34 @@
+{%- assign blog = blogs[section.settings.blog] -%}
+<section class="section" aria-labelledby="journal-{{ section.id }}">
+  <div class="container">
+    <div class="section-head">
+      <div><span class="label">{{ section.settings.eyebrow }}</span><h2 class="h2 section-head__title" id="journal-{{ section.id }}">{{ section.settings.title }}</h2></div>
+      {%- if blog != blank -%}<div class="section-head__aside"><a class="link-arrow" href="{{ blog.url }}">{{ 'blog.all_articles' | t }} {% render 'icon', name: 'arrow' %}</a></div>{%- endif -%}
+    </div>
+    <div class="journal__grid">
+      {%- for article in blog.articles limit: 3 -%}
+        <article class="post{% if forloop.first %} post--lead{% endif %} reveal">
+          <div class="media">
+            {%- if forloop.first -%}{% render 'image', image: article.image, sizes: '(min-width:1024px) 48vw, 100vw', max: 1200, alt: '' %}{%- else -%}{% render 'image', image: article.image, sizes: '(min-width:1024px) 22vw, 120px', max: 720, alt: '' %}{%- endif -%}
+          </div>
+          <div>
+            <p class="label post__meta">{% if article.tags.size > 0 %}{{ article.tags.first }} · {% endif %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | time_tag: format: 'date' | strip_html }}</time></p>
+            <h3 class="post__title"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+            <p>{{ article.excerpt_or_content | strip_html | truncatewords: 26 }}</p>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Journal (blog)",
+  "settings": [
+    { "type": "blog", "id": "blog", "label": "Blog", "default": "news" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Inspirations & conseils" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Le journal <em>Mobilia</em>." }
+  ],
+  "presets": [{ "name": "Journal (blog)" }]
+}
+{% endschema %}

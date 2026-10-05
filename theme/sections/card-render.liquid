@@ -1,0 +1,5 @@
+{%- comment -%} Utility: /products/<handle>?section_id=card-render returns one product card (recently viewed, wishlist). {%- endcomment -%}
+{% render 'product-card', product: product, compact: true, list: 'client_rendered' %}
+{% schema %}
+{ "name": "Carte produit (rendu)", "settings": [] }
+{% endschema %}

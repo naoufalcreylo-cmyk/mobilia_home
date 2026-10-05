@@ -1,0 +1,50 @@
+{%- comment -%}
+  "Complétez votre intérieur". Priority:
+  1. product metafield mobilia.complements (list of product references) — stylist-curated
+  2. Shopify complementary recommendations (Search & Discovery app > Complementary products),
+     lazy-loaded through /recommendations/products?intent=complementary&section_id=…
+{%- endcomment -%}
+{%- liquid
+  assign curated = product.metafields.mobilia.complements.value
+  if recommendations.performed
+    assign items = recommendations.products
+  else
+    assign items = curated
+  endif
+-%}
+<section class="section section--linen" aria-labelledby="complete-{{ section.id }}"
+  {%- if curated == blank and recommendations.performed == false %} data-recommendations="{{ routes.product_recommendations_url }}?product_id={{ product.id }}&limit=3&intent=complementary&section_id={{ section.id }}"{% endif %}
+  {%- if curated == blank and recommendations.performed == false %} hidden{% endif %}>
+  {%- if items.size > 0 -%}
+  <div class="container complete__grid">
+    <div class="complete__intro">
+      <span class="label">{{ section.settings.eyebrow }}</span>
+      <h2 class="h2" id="complete-{{ section.id }}">{{ section.settings.title }}</h2>
+      <p>{{ section.settings.text }}</p>
+      {%- capture compose_msg -%}{{ 'products.compose_message' | t: title: product.title }} {{ shop.url }}{{ product.url }}{%- endcapture -%}
+      <a class="btn btn--wa" style="margin-top:1.5rem" href="{% render 'whatsapp-url', message: compose_msg %}" target="_blank" rel="noopener" data-wa-context="complete_room">{% render 'icon', name: 'whatsapp', class: 'wa-icon' %}{{ section.settings.cta_label }}</a>
+    </div>
+    <div class="complete__list" data-list="complete_the_room">
+      {%- for p in items limit: 3 -%}
+        <div class="complete__group">
+          <span class="label">{{ p.metafields.mobilia.category.value | default: p.type }}</span>
+          {% render 'product-card', product: p, compact: true, list: 'complete_the_room', sizes: '(min-width:1024px) 20vw, 66vw' %}
+          {%- assign col = p.collections.first -%}
+          {%- if col -%}<a class="link-arrow" href="{{ col.url }}">{{ 'products.all_models' | t }} {% render 'icon', name: 'arrow' %}</a>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- endif -%}
+</section>
+{% schema %}
+{
+  "name": "Complétez votre intérieur",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Conseil de nos stylistes" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Complétez votre <em>intérieur</em>." },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Des pièces choisies pour accompagner ce modèle et composer une pièce cohérente." },
+    { "type": "text", "id": "cta_label", "label": "Bouton WhatsApp", "default": "Composer avec un conseiller" }
+  ]
+}
+{% endschema %}
